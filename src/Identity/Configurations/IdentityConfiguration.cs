@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Identity.Hooks;
+namespace Avolutions.BAF.Core.Identity.Configurations;
 
-public class IdentityJoinEntitiesHook : IModelCreatingHook
+public class IdentityConfiguration : IModelConfiguration
 {
     public void Configure(ModelBuilder modelBuilder)
     {

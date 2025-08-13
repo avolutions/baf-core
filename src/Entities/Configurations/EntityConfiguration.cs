@@ -3,9 +3,9 @@ using Avolutions.BAF.Core.Identity.Models;
 using Avolutions.BAF.Core.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Entities.Hooks;
+namespace Avolutions.BAF.Core.Entities.Configurations;
 
-public class EntitiesHook : IModelCreatingHook
+public class EntityConfiguration : IModelConfiguration
 {
     public void Configure(ModelBuilder modelBuilder)
     {

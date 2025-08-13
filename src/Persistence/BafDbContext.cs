@@ -1,7 +1,9 @@
 ﻿using Avolutions.BAF.Core.Identity.Models;
 using Avolutions.BAF.Core.Persistence.Abstractions;
+using Avolutions.BAF.Core.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Avolutions.BAF.Core.Persistence;
 
@@ -19,62 +21,46 @@ namespace Avolutions.BAF.Core.Persistence;
 /// </summary>
 public class BafDbContext : IdentityDbContext<User, Role, Guid>
 {
-    private readonly IReadOnlyList<IModelCreatingHook> _modelHooks;
-    private readonly IReadOnlyList<ISaveChangesHook> _saveHooks;
-    
-    /// <summary>
-    /// Protected constructor so only derived contexts (e.g. the app's DbContext)
-    /// can create an instance. Accepts DbContextOptions to support DI and provider configuration.
-    /// </summary>
-    protected BafDbContext(
-        DbContextOptions options,
-        IEnumerable<IModelCreatingHook>? modelHooks = null,
-        IEnumerable<ISaveChangesHook>? saveHooks = null) : base(options)
-    {
-        _modelHooks = (modelHooks ?? [])
-            .OrderBy(h => h.Order)
-            .ToList();
+    public BafDbContext(DbContextOptions options) : base(options) {}
 
-        _saveHooks = (saveHooks ?? [])
-            .OrderBy(h => h.Order)
-            .ToList();
+    public override int SaveChanges()
+    {
+        return SaveChangesAsync().GetAwaiter().GetResult();
     }
 
-    public override int SaveChanges() => SaveChangesAsync().GetAwaiter().GetResult();
-    
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        foreach (var hook in _saveHooks)
+    {   
+        var hooks = (this.GetService<IEnumerable<ISaveChangesHook>>() ?? [])
+            .OrderBy(h => h.Order)
+            .ThenBy(h => h.GetType().FullName)
+            .ToArray();
+        
+        foreach (var hook in hooks)
         {
-            await hook.OnSavingAsync(this, cancellationToken);
+            await hook.OnBeforeSaveChanges(this, cancellationToken);
         }
         
         var rows = await base.SaveChangesAsync(cancellationToken);
-
-        foreach (var hook in _saveHooks.Reverse())
+        
+        foreach (var hook in hooks.Reverse())
         {
-            await hook.OnSavedAsync(this, rows, cancellationToken);
+            await hook.OnAfterSaveChanges(this, rows, cancellationToken);
         }
         
         return rows;
     }
     
-    /// <summary>
-    /// Configures the EF Core model: by applying configurations from the current assembly (BAF modules).
-    /// Application-specific entities remain in their own/default schema.
-    /// </summary>
-    /// <param name="modelBuilder">The model builder used to configure entity mappings.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Apply any configuration from base classes
         base.OnModelCreating(modelBuilder);
         
-        // Apply all IEntityTypeConfiguration<> implementations from this assembly
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BafDbContext).Assembly);
+        var bafAssembly = typeof(BafDbContext).Assembly;
         
-        foreach (var hook in _modelHooks)
-        {
-            hook.Configure(modelBuilder);
-        }
+        // Model-level configs
+        modelBuilder.ApplyModelConfigurationsFromAssembly(bafAssembly);
+
+        // Per-entity configs
+        modelBuilder.ApplyConfigurationsFromAssembly(bafAssembly);
     }
 }

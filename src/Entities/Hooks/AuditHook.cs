@@ -6,7 +6,7 @@ namespace Avolutions.BAF.Core.Entities.Hooks;
 
 public class AuditHook : ISaveChangesHook
 {
-    public Task OnSavingAsync(DbContext context, CancellationToken ct)
+    public Task OnBeforeSaveChanges(DbContext context, CancellationToken ct)
     {
         var entries = context.ChangeTracker.Entries()
             .Where(e => e is { Entity: IEntity, State: EntityState.Added or EntityState.Modified });
