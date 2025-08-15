@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
-using Avolutions.BAF.Core.Modules.Abstractions;
+using Avolutions.BAF.Core.Module.Abstractions;
+using Avolutions.BAF.Core.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Avolutions.BAF.Core.Modules.Extensions;
+namespace Avolutions.BAF.Core.Module.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="IServiceCollection"/> 
@@ -25,8 +27,11 @@ public static class ServiceCollectionExtensions
     /// Optional list of assemblies to scan. If empty, all currently loaded assemblies are scanned.
     /// </param>
     /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
-    public static IServiceCollection AddBafCore(this IServiceCollection services, params Assembly[] assemblies)
+    public static IServiceCollection AddBafCore<TContext>(this IServiceCollection services, params Assembly[] assemblies)
+        where TContext : BafDbContext
     {
+        services.TryAddScoped<BafDbContext>(sp => sp.GetRequiredService<TContext>());
+        
         var modules = DiscoverModules(assemblies).ToArray();
 
         // Let each module register its own services

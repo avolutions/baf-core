@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Modules.Extensions;
+namespace Avolutions.BAF.Core.Module.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="WebApplication"/> 

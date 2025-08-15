@@ -1,4 +1,4 @@
-﻿using Avolutions.BAF.Core.Modules.Abstractions;
+﻿using Avolutions.BAF.Core.Module.Abstractions;
 using Avolutions.BAF.Core.Search.Services;
 using Microsoft.Extensions.DependencyInjection;
 

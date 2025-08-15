@@ -1,6 +1,6 @@
 ﻿using Avolutions.BAF.Core.Entity.Abstractions;
 using Avolutions.BAF.Core.Entity.Services;
-using Avolutions.BAF.Core.Modules.Abstractions;
+using Avolutions.BAF.Core.Module.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Avolutions.BAF.Core.Entity;
