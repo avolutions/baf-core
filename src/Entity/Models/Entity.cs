@@ -1,6 +1,6 @@
-﻿using Avolutions.BAF.Core.Entities.Abstractions;
+﻿using Avolutions.BAF.Core.Entity.Abstractions;
 
-namespace Avolutions.BAF.Core.Entities.Models;
+namespace Avolutions.BAF.Core.Entity.Models;
 
 /// <summary>
 /// Base entity implementation for BAF entities.

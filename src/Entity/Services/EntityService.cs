@@ -1,8 +1,8 @@
-﻿using Avolutions.BAF.Core.Entities.Abstractions;
-using Avolutions.BAF.Core.Entities.Exceptions;
+﻿using Avolutions.BAF.Core.Entity.Abstractions;
+using Avolutions.BAF.Core.Entity.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Entities.Services;
+namespace Avolutions.BAF.Core.Entity.Services;
 
 public class EntityService<TEntity> : IEntityService<TEntity>
     where TEntity : class, IEntity

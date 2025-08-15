@@ -1,9 +1,9 @@
-﻿using Avolutions.BAF.Core.Entities.Abstractions;
-using Avolutions.BAF.Core.Entities.Services;
+﻿using Avolutions.BAF.Core.Entity.Abstractions;
+using Avolutions.BAF.Core.Entity.Services;
 using Avolutions.BAF.Core.Modules.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Entities;
+namespace Avolutions.BAF.Core.Entity;
 
 public class EntityModule : IFeatureModule
 {
