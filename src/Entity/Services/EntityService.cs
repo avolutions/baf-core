@@ -1,5 +1,8 @@
 ﻿using Avolutions.BAF.Core.Entity.Abstractions;
 using Avolutions.BAF.Core.Entity.Exceptions;
+using Avolutions.BAF.Core.Validation.Abstractions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.BAF.Core.Entity.Services;
@@ -9,11 +12,13 @@ public class EntityService<TEntity> : IEntityService<TEntity>
 {
     protected readonly DbContext Context;
     protected readonly DbSet<TEntity> DbSet;
+    private readonly IValidator<TEntity>? _validator;
         
-    public EntityService(DbContext context)
+    public EntityService(DbContext context, IValidator<TEntity>? validator)
     {
         Context = context;
         DbSet = context.Set<TEntity>();
+        _validator = validator;
     }
         
     public virtual async Task<List<TEntity>> GetAllAsync()
@@ -28,6 +33,8 @@ public class EntityService<TEntity> : IEntityService<TEntity>
 
     public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {
+        await ValidateOrThrowAsync(entity, RuleSets.Create);
+        
         DbSet.Add(entity);
         await Context.SaveChangesAsync();
         return entity;
@@ -40,6 +47,8 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         {
             throw new EntityNotFoundException(typeof(TEntity), entity.Id);
         }
+        
+        await ValidateOrThrowAsync(entity, RuleSets.Update);
 
         Context.Entry(entity).State = EntityState.Modified;
         await Context.SaveChangesAsync();
@@ -71,5 +80,23 @@ public class EntityService<TEntity> : IEntityService<TEntity>
     public virtual async Task<TEntity?> GetByExternalIdAsync(string externalId)
     {
         return await DbSet.FirstOrDefaultAsync(e => e.ExternalId == externalId);
+    }
+    
+    protected virtual async Task ValidateOrThrowAsync(TEntity entity, string? ruleSet = null, CancellationToken ct = default)
+    {
+        if (_validator is null) return; // no validator registered for TEntity
+
+        ValidationResult result = await _validator.ValidateAsync(entity, opts =>
+        {
+            if (!string.IsNullOrWhiteSpace(ruleSet))
+            {
+                opts.IncludeRuleSets(ruleSet);
+            }
+        }, ct);
+
+        if (!result.IsValid)
+        {
+            throw new EntityValidationException(typeof(TEntity), result.Errors);
+        }
     }
 }
