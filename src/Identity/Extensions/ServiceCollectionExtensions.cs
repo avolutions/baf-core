@@ -1,4 +1,5 @@
 ﻿using Avolutions.BAF.Core.Identity.Models;
+using Avolutions.BAF.Core.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,10 +12,9 @@ namespace Avolutions.BAF.Core.Identity.Extensions;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddBafIdentity<TContext>(
+    public static IServiceCollection AddBafIdentity(
         this IServiceCollection services,
         Action<IdentityOptions>? configure = null)
-        where TContext : DbContext
     {
         services.AddCascadingAuthenticationState();
 
@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
                 o.User.RequireUniqueEmail = false;
             })
             .AddRoles<Role>()
-            .AddEntityFrameworkStores<TContext>()
+            .AddEntityFrameworkStores<BafDbContext>()
             .AddSignInManager()
             .AddDefaultTokenProviders();
 

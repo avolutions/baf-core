@@ -1,4 +1,5 @@
 ﻿using Avolutions.BAF.Core.Identity.Models;
+using Avolutions.BAF.Core.NumberSequences.Models;
 using Avolutions.BAF.Core.Persistence.Abstractions;
 using Avolutions.BAF.Core.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -21,6 +22,8 @@ namespace Avolutions.BAF.Core.Persistence;
 /// </summary>
 public class BafDbContext : IdentityDbContext<User, Role, Guid>
 {
+    public DbSet<NumberSequence> NumberSequences => Set<NumberSequence>();
+    
     public BafDbContext(DbContextOptions options) : base(options) {}
 
     public override int SaveChanges()

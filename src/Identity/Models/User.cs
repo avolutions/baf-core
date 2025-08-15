@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Avolutions.BAF.Core.Entities.Abstractions;
+using Avolutions.BAF.Core.Entity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
 namespace Avolutions.BAF.Core.Identity.Models;
