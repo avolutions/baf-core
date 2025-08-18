@@ -1,4 +1,4 @@
-# Avolutions.Baf.Core
+# Avolutions BAF Core
 
 Core library for the Avolutions Business Application Framework (BAF).
 
