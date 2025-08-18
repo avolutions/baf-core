@@ -4,8 +4,30 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <PackageId>Avolutions.Baf.Core</PackageId>
+    <Version>0.1.0</Version>
+
+    <Title>Avolutions BAF Core</Title>
+    <Company>Avolutions</Company>
+    <Authors>Alexander Vogt</Authors>
+    <Description>Core library for the Avolutions Business Application Framework (BAF).</Description>
+    <RepositoryUrl>https://github.com/avolutions/baf-core</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>    
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
