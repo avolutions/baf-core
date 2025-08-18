@@ -3,25 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Avolutions.BAF.Core.Module.Extensions;
 
-/// <summary>
-/// Provides extension methods for <see cref="WebApplication"/> 
-/// to initialize and configure BAF modules at application startup.
-/// </summary>
 public static class ApplicationBuilderExtensions
 {
-    /// <summary>
-    /// Discovers and executes all <see cref="IFeatureModule"/> implementations 
-    /// that were registered via <c>AddBafCore()</c>.
-    /// 
-    /// This method:
-    /// 1. Calls <see cref="IFeatureModule.Configure"/> on each module 
-    ///    to configure the middleware pipeline.
-    /// 2. Creates a scoped service provider to run <see cref="IFeatureModule.InitializeAsync"/> 
-    ///    for post-startup initialization logic (e.g., seeding data, building navigation).
-    /// </summary>
-    /// <param name="app">The application to configure.</param>
-    /// <returns>The <see cref="WebApplication"/> instance for chaining.</returns>
-    public static WebApplication UseBaf(this WebApplication app)
+    public static WebApplication UseBafCore(this WebApplication app)
     {
         // Retrieve module catalog populated by AddBafCore()
         var catalog = app.Services.GetService<ServiceCollectionExtensions.BafModuleCatalog>();
