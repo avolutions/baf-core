@@ -1,7 +1,8 @@
 ﻿using Avolutions.BAF.Core.Identity.Models;
+using Avolutions.Baf.Core.Identity.Services;
 using Avolutions.BAF.Core.Persistence;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Avolutions.BAF.Core.Identity.Extensions;
@@ -17,19 +18,21 @@ public static class ServiceCollectionExtensions
         Action<IdentityOptions>? configure = null)
     {
         services.AddCascadingAuthenticationState();
+        services.AddScoped<IdentityRedirectManager>();
+        services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-        services.AddAuthentication(o =>
+        services.AddAuthentication(options =>
             {
-                o.DefaultScheme = IdentityConstants.ApplicationScheme;
-                o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
             .AddIdentityCookies();
 
-        services.AddIdentityCore<User>(o =>
+        services.AddIdentityCore<User>(options =>
             {
-                configure?.Invoke(o);
-                o.SignIn.RequireConfirmedAccount = false;
-                o.User.RequireUniqueEmail = false;
+                options.SignIn.RequireConfirmedAccount = false;
+                options.User.RequireUniqueEmail = false;
+                configure?.Invoke(options);
             })
             .AddRoles<Role>()
             .AddEntityFrameworkStores<BafDbContext>()
