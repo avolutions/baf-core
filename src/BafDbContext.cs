@@ -26,6 +26,7 @@ public class BafDbContext : IdentityDbContext<User, Role, Guid>
 {
     public DbSet<NumberSequence> NumberSequences => Set<NumberSequence>();
     public DbSet<Setting> Settings => Set<Setting>();
+    public DbSet<SetupStatus> SetupStatus => Set<SetupStatus>();
     
     public BafDbContext(DbContextOptions options) : base(options) {}
 
