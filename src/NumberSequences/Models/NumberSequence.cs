@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Avolutions.BAF.Core.NumberSequences.Models;
+namespace Avolutions.Baf.Core.NumberSequences.Models;
 
 public class NumberSequence
 {

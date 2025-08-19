@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.NumberSequences.Models;
+﻿namespace Avolutions.Baf.Core.NumberSequences.Models;
 
 public interface INumberSequenceDefinition
 {

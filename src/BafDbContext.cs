@@ -1,13 +1,14 @@
-﻿using Avolutions.BAF.Core.Identity.Models;
-using Avolutions.BAF.Core.NumberSequences.Models;
-using Avolutions.BAF.Core.Persistence.Abstractions;
-using Avolutions.BAF.Core.Persistence.Extensions;
-using Avolutions.BAF.Core.Settings.Models;
+﻿using Avolutions.Baf.Core.Identity.Models;
+using Avolutions.Baf.Core.NumberSequences.Models;
+using Avolutions.Baf.Core.Persistence.Abstractions;
+using Avolutions.Baf.Core.Persistence.Extensions;
+using Avolutions.Baf.Core.Settings.Models;
+using Avolutions.Baf.Core.Setup.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Avolutions.BAF.Core.Persistence;
+namespace Avolutions.Baf.Core;
 
 /// <summary>
 /// Base DbContext for the BAF framework.
@@ -24,8 +25,8 @@ namespace Avolutions.BAF.Core.Persistence;
 public class BafDbContext : IdentityDbContext<User, Role, Guid>
 {
     public DbSet<NumberSequence> NumberSequences => Set<NumberSequence>();
-    
     public DbSet<Setting> Settings => Set<Setting>();
+    public DbSet<SetupStatus> SetupStatus => Set<SetupStatus>();
     
     public BafDbContext(DbContextOptions options) : base(options) {}
 

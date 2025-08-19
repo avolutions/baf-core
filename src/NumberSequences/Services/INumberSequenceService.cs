@@ -1,6 +1,6 @@
-﻿using Avolutions.BAF.Core.NumberSequences.Models;
+﻿using Avolutions.Baf.Core.NumberSequences.Models;
 
-namespace Avolutions.BAF.Core.NumberSequences.Services;
+namespace Avolutions.Baf.Core.NumberSequences.Services;
 
 public interface INumberSequenceService<T> where T : INumberSequenceDefinition
 {

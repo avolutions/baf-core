@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using Avolutions.BAF.Core.Module.Abstractions;
+using Avolutions.Baf.Core.Module.Abstractions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Validation;
+namespace Avolutions.Baf.Core.Validation;
 
 public class ValidationModule : IFeatureModule
 {

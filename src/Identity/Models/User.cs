@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Avolutions.BAF.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Common;
+using Avolutions.Baf.Core.Entity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Avolutions.BAF.Core.Identity.Models;
+namespace Avolutions.Baf.Core.Identity.Models;
 
 public class User : IdentityUser<Guid>, IEntity
 {
@@ -27,6 +28,16 @@ public class User : IdentityUser<Guid>, IEntity
             return $"{Firstname[0]}{Lastname[0]}".ToUpper();
         }
         return "";
+    }
+    public (string Background, string Text) GetAvatarColors()
+    {
+        if (!string.IsNullOrWhiteSpace(AvatarColor))
+        {
+            var color = MaterialColors.Colors.FirstOrDefault(c => c.Background == AvatarColor);
+            return color != default ? color : MaterialColors.DefaultColor;
+        }
+
+        return MaterialColors.DefaultColor;
     }
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }

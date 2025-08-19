@@ -2,7 +2,7 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Validation.Extensions;
+namespace Avolutions.Baf.Core.Validation.Extensions;
 
 public static class FluentValidationExtensions
 {

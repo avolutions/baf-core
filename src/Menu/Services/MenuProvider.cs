@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
-using Avolutions.BAF.Core.Menu.Abstractions;
-using Avolutions.BAF.Core.Menu.Models;
+using Avolutions.Baf.Core.Menu.Abstractions;
+using Avolutions.Baf.Core.Menu.Models;
 using Mapster;
 
-namespace Avolutions.BAF.Core.Menu.Services;
+namespace Avolutions.Baf.Core.Menu.Services;
 
 public class MenuProvider<TMenu> where TMenu : IMenu
 {

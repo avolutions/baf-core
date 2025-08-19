@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Menu.Abstractions;
+﻿namespace Avolutions.Baf.Core.Menu.Abstractions;
 
 public interface IMenu
 {

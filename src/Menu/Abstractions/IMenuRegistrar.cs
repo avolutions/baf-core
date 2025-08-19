@@ -1,6 +1,6 @@
-﻿using Avolutions.BAF.Core.Menu.Services;
+﻿using Avolutions.Baf.Core.Menu.Services;
 
-namespace Avolutions.BAF.Core.Menu.Abstractions;
+namespace Avolutions.Baf.Core.Menu.Abstractions;
 
 public interface IMenuRegistrar<TMenu> where TMenu : IMenu
 {

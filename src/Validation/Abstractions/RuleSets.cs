@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Validation.Abstractions;
+﻿namespace Avolutions.Baf.Core.Validation.Abstractions;
 
 public static class RuleSets
 {

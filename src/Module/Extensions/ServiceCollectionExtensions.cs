@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
-using Avolutions.BAF.Core.Module.Abstractions;
-using Avolutions.BAF.Core.Persistence;
+using Avolutions.Baf.Core;
+using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Avolutions.BAF.Core.Module.Extensions;
+namespace Avolutions.Baf.Core.Module.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="IServiceCollection"/> 

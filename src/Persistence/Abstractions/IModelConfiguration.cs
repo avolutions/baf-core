@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Persistence.Abstractions;
+namespace Avolutions.Baf.Core.Persistence.Abstractions;
 
 public interface IModelConfiguration
 {

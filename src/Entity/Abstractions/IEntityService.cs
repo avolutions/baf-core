@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Entity.Abstractions;
+﻿namespace Avolutions.Baf.Core.Entity.Abstractions;
 
 public interface IEntityService<TEntity>
     where TEntity : IEntity

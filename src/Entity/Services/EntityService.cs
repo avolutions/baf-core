@@ -1,11 +1,11 @@
-﻿using Avolutions.BAF.Core.Entity.Abstractions;
-using Avolutions.BAF.Core.Entity.Exceptions;
-using Avolutions.BAF.Core.Validation.Abstractions;
+﻿using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Entity.Exceptions;
+using Avolutions.Baf.Core.Validation.Abstractions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Entity.Services;
+namespace Avolutions.Baf.Core.Entity.Services;
 
 public class EntityService<TEntity> : IEntityService<TEntity>
     where TEntity : class, IEntity

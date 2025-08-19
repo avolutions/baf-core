@@ -1,9 +1,9 @@
-﻿using Avolutions.BAF.Core.Module.Abstractions;
-using Avolutions.BAF.Core.Settings.Abstractions;
-using Avolutions.BAF.Core.Settings.Infrastructure;
+﻿using Avolutions.Baf.Core.Module.Abstractions;
+using Avolutions.Baf.Core.Settings.Abstractions;
+using Avolutions.Baf.Core.Settings.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Settings;
+namespace Avolutions.Baf.Core.Settings;
 
 public class SettingsModule : IFeatureModule
 {

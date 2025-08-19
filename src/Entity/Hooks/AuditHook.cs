@@ -1,8 +1,8 @@
-﻿using Avolutions.BAF.Core.Entity.Abstractions;
-using Avolutions.BAF.Core.Persistence.Abstractions;
+﻿using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Entity.Hooks;
+namespace Avolutions.Baf.Core.Entity.Hooks;
 
 public class AuditHook : ISaveChangesHook
 {

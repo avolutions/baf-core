@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Avolutions.BAF.Core.Entity.Exceptions;
+namespace Avolutions.Baf.Core.Entity.Exceptions;
 
 public sealed class EntityValidationException : Exception
 {
