@@ -1,6 +1,6 @@
-﻿using Avolutions.BAF.Core.Identity.Models;
+﻿using Avolutions.Baf.Core;
+using Avolutions.BAF.Core.Identity.Models;
 using Avolutions.Baf.Core.Identity.Services;
-using Avolutions.BAF.Core.Persistence;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

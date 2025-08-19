@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text.Json;
-using Avolutions.BAF.Core.Persistence;
+using Avolutions.Baf.Core;
 using Avolutions.BAF.Core.Settings.Abstractions;
 using Avolutions.BAF.Core.Settings.Attributes;
 using Avolutions.BAF.Core.Settings.Models;

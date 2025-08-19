@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
+using Avolutions.Baf.Core;
 using Avolutions.BAF.Core.Module.Abstractions;
-using Avolutions.BAF.Core.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

@@ -16,19 +16,19 @@ public static class ApplicationBuilderExtensions
         }
 
         // Configure middleware pipeline for each module
-        foreach (var m in catalog.Modules)
+        foreach (var module in catalog.Modules)
         {
-            m.Configure(app);
+            module.Configure(app);
         }
         
         // Create a scoped DI context for initialization
         using var scope = app.Services.CreateScope();
-        var sp = scope.ServiceProvider;
+        var serviceProvider = scope.ServiceProvider;
 
         // Initialize modules synchronously (safe during startup)
-        foreach (var m in catalog.Modules)
+        foreach (var module in catalog.Modules)
         {
-            m.InitializeAsync(sp, app.Lifetime.ApplicationStopping)
+            module.InitializeAsync(serviceProvider, app.Lifetime.ApplicationStopping)
                 .GetAwaiter()
                 .GetResult(); // Blocking is OK here since startup is synchronous
         }
