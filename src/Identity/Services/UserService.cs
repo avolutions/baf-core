@@ -1,6 +1,6 @@
 ﻿using Avolutions.Baf.Core.Common;
-using Avolutions.BAF.Core.Entity.Abstractions;
-using Avolutions.BAF.Core.Identity.Models;
+using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

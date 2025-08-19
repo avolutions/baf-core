@@ -2,13 +2,13 @@
 using System.Reflection;
 using System.Text.Json;
 using Avolutions.Baf.Core;
-using Avolutions.BAF.Core.Settings.Abstractions;
-using Avolutions.BAF.Core.Settings.Attributes;
-using Avolutions.BAF.Core.Settings.Models;
+using Avolutions.Baf.Core.Settings.Abstractions;
+using Avolutions.Baf.Core.Settings.Attributes;
+using Avolutions.Baf.Core.Settings.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Settings.Infrastructure;
+namespace Avolutions.Baf.Core.Settings.Infrastructure;
 
 public class SettingsStore : ISettingsStore
 {

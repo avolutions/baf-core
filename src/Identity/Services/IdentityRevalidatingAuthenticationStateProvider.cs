@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Avolutions.BAF.Core.Identity.Models;
+using Avolutions.Baf.Core.Identity.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;

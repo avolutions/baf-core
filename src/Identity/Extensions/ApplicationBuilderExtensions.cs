@@ -1,4 +1,4 @@
-﻿using Avolutions.BAF.Core.Identity.Extensions;
+﻿using Avolutions.Baf.Core.Identity.Extensions;
 using Microsoft.AspNetCore.Builder;
 
 namespace Avolutions.Baf.Core.Identity.Extensions;

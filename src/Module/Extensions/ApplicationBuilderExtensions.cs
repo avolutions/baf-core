@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Module.Extensions;
+namespace Avolutions.Baf.Core.Module.Extensions;
 
 public static class ApplicationBuilderExtensions
 {

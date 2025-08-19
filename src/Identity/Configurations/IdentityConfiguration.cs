@@ -1,8 +1,8 @@
-﻿using Avolutions.BAF.Core.Persistence.Abstractions;
+﻿using Avolutions.Baf.Core.Persistence.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Identity.Configurations;
+namespace Avolutions.Baf.Core.Identity.Configurations;
 
 public class IdentityConfiguration : IModelConfiguration
 {

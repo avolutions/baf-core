@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using Avolutions.BAF.Core.Persistence.Abstractions;
+using Avolutions.Baf.Core.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Persistence.Extensions;
+namespace Avolutions.Baf.Core.Persistence.Extensions;
 
 public static class ModelBuilderExtensions
 {

@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Search.Models;
+﻿namespace Avolutions.Baf.Core.Search.Models;
 
 public class SearchResult
 {

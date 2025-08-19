@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Identity.Models;
+﻿namespace Avolutions.Baf.Core.Identity.Models;
 
 public static class SystemRoles
 {

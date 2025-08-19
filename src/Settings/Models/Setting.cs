@@ -1,6 +1,6 @@
-﻿using Avolutions.BAF.Core.Entity.Models;
+﻿using Avolutions.Baf.Core.Entity.Models;
 
-namespace Avolutions.BAF.Core.Settings.Models;
+namespace Avolutions.Baf.Core.Settings.Models;
 
 public class Setting : EntityBase
 {

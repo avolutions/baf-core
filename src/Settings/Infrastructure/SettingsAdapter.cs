@@ -1,6 +1,6 @@
-﻿using Avolutions.BAF.Core.Settings.Abstractions;
+﻿using Avolutions.Baf.Core.Settings.Abstractions;
 
-namespace Avolutions.BAF.Core.Settings.Infrastructure;
+namespace Avolutions.Baf.Core.Settings.Infrastructure;
 
 internal sealed class SettingsAdapter<T> : ISettings<T> where T : class, new()
 {

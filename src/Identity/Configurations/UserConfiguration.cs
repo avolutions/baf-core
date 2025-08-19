@@ -1,8 +1,8 @@
-﻿using Avolutions.BAF.Core.Identity.Models;
+﻿using Avolutions.Baf.Core.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Avolutions.BAF.Core.Identity.Configurations;
+namespace Avolutions.Baf.Core.Identity.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

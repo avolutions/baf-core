@@ -1,8 +1,8 @@
-﻿using Avolutions.BAF.Core.Identity.Models;
-using Avolutions.BAF.Core.NumberSequences.Models;
-using Avolutions.BAF.Core.Persistence.Abstractions;
-using Avolutions.BAF.Core.Persistence.Extensions;
-using Avolutions.BAF.Core.Settings.Models;
+﻿using Avolutions.Baf.Core.Identity.Models;
+using Avolutions.Baf.Core.NumberSequences.Models;
+using Avolutions.Baf.Core.Persistence.Abstractions;
+using Avolutions.Baf.Core.Persistence.Extensions;
+using Avolutions.Baf.Core.Settings.Models;
 using Avolutions.Baf.Core.Setup.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

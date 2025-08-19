@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Menu.Models;
+﻿namespace Avolutions.Baf.Core.Menu.Models;
 
 public class MenuItem
 {

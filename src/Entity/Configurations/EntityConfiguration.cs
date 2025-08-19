@@ -1,9 +1,9 @@
-﻿using Avolutions.BAF.Core.Entity.Abstractions;
-using Avolutions.BAF.Core.Identity.Models;
-using Avolutions.BAF.Core.Persistence.Abstractions;
+﻿using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Identity.Models;
+using Avolutions.Baf.Core.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.Entity.Configurations;
+namespace Avolutions.Baf.Core.Entity.Configurations;
 
 public class EntityConfiguration : IModelConfiguration
 {

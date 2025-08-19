@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Avolutions.Baf.Core.Common;
-using Avolutions.BAF.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Entity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Avolutions.BAF.Core.Identity.Models;
+namespace Avolutions.Baf.Core.Identity.Models;
 
 public class User : IdentityUser<Guid>, IEntity
 {

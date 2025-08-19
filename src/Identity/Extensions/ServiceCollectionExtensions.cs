@@ -1,11 +1,11 @@
 ﻿using Avolutions.Baf.Core;
-using Avolutions.BAF.Core.Identity.Models;
+using Avolutions.Baf.Core.Identity.Models;
 using Avolutions.Baf.Core.Identity.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Identity.Extensions;
+namespace Avolutions.Baf.Core.Identity.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="IServiceCollection"/> 

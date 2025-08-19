@@ -1,8 +1,8 @@
 ﻿using Avolutions.Baf.Core;
-using Avolutions.BAF.Core.NumberSequences.Models;
+using Avolutions.Baf.Core.NumberSequences.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.BAF.Core.NumberSequences.Services;
+namespace Avolutions.Baf.Core.NumberSequences.Services;
 
 public class NumberSequenceService : INumberSequenceService
 {

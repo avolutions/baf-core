@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Identity.Models;
+﻿namespace Avolutions.Baf.Core.Identity.Models;
 
 /// <summary>
 /// Special technical account used internally for CreatedBy/ModifiedBy defaults.

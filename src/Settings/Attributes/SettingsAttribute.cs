@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Settings.Attributes;
+﻿namespace Avolutions.Baf.Core.Settings.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class SettingsAttribute : Attribute

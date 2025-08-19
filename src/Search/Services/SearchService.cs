@@ -1,7 +1,7 @@
-﻿using Avolutions.BAF.Core.Search.Models;
+﻿using Avolutions.Baf.Core.Search.Models;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Avolutions.BAF.Core.Search.Services;
+namespace Avolutions.Baf.Core.Search.Services;
 
 public class SearchService
 {

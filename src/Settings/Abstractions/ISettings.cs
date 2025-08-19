@@ -1,4 +1,4 @@
-﻿namespace Avolutions.BAF.Core.Settings.Abstractions;
+﻿namespace Avolutions.Baf.Core.Settings.Abstractions;
 
 public interface ISettings<T> where T : class, new()
 {
