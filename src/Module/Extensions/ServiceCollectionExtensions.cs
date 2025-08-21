@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using Avolutions.Baf.Core;
 using Avolutions.Baf.Core.Module.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -30,6 +30,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddBafCore<TContext>(this IServiceCollection services, params Assembly[] assemblies)
         where TContext : BafDbContext
     {
+        services.TryAddScoped<DbContext>(sp => sp.GetRequiredService<TContext>());
         services.TryAddScoped<BafDbContext>(sp => sp.GetRequiredService<TContext>());
         
         var modules = DiscoverModules(assemblies).ToArray();
