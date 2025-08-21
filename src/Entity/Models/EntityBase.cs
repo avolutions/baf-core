@@ -6,7 +6,7 @@ namespace Avolutions.Baf.Core.Entity.Models;
 /// Base entity implementation for BAF entities.
 /// Inherit from this class to get all core fields and override <see cref="GetName"/>.
 /// </summary>
-public abstract class EntityBase : IEntity
+public abstract class EntityBase : IEntity, IAuditable
 {
     public Guid Id { get; set; }
     public string? ExternalId { get; set; }

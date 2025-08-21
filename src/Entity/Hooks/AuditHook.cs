@@ -9,11 +9,11 @@ public class AuditHook : ISaveChangesHook
     public Task OnBeforeSaveChanges(DbContext context, CancellationToken ct)
     {
         var entries = context.ChangeTracker.Entries()
-            .Where(e => e is { Entity: IEntity, State: EntityState.Added or EntityState.Modified });
+            .Where(e => e is { Entity: IAuditable, State: EntityState.Added or EntityState.Modified });
 
         foreach (var entry in entries)
         {
-            var entity = (IEntity)entry.Entity;
+            var entity = (IAuditable)entry.Entity;
             if (entry.State == EntityState.Added)
             {
                 entity.CreatedAt = DateTime.UtcNow;

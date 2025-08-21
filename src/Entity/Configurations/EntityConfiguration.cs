@@ -15,20 +15,27 @@ public class EntityConfiguration : IModelConfiguration
         {
             var builder = modelBuilder.Entity(entityType.ClrType);
 
-            builder.Property(nameof(IEntity.CreatedAt))
-                .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
-
-            builder.Property(nameof(IEntity.ModifiedAt))
-                .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
-
-            builder.Property(nameof(IEntity.CreatedBy))
-                .HasDefaultValue(SystemUser.Id);
-
-            builder.Property(nameof(IEntity.ModifiedBy))
-                .HasDefaultValue(SystemUser.Id);
-
             builder
                 .HasIndex(nameof(IEntity.ExternalId));
+        }
+        
+        // Apply default values to all IAuditable entities
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes()
+                     .Where(t => typeof(IAuditable).IsAssignableFrom(t.ClrType)))
+        {
+            var builder = modelBuilder.Entity(entityType.ClrType);
+
+            builder.Property(nameof(IAuditable.CreatedAt))
+                .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
+
+            builder.Property(nameof(IAuditable.ModifiedAt))
+                .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
+
+            builder.Property(nameof(IAuditable.CreatedBy))
+                .HasDefaultValue(SystemUser.Id);
+
+            builder.Property(nameof(IAuditable.ModifiedBy))
+                .HasDefaultValue(SystemUser.Id);
         }
     }
 }
