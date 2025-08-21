@@ -1,5 +1,4 @@
-﻿using Avolutions.Baf.Core;
-using Avolutions.Baf.Core.NumberSequences.Models;
+﻿using Avolutions.Baf.Core.NumberSequences.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.NumberSequences.Services;
