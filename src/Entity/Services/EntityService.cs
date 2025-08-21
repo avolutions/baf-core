@@ -12,13 +12,15 @@ public class EntityService<TEntity> : IEntityService<TEntity>
 {
     protected readonly DbContext Context;
     protected readonly DbSet<TEntity> DbSet;
-    private readonly IValidator<TEntity>? _validator;
+    protected readonly IValidator<TEntity>? Validator;
+
+    public EntityService(DbContext context) : this(context, null) {}
         
     public EntityService(DbContext context, IValidator<TEntity>? validator)
     {
         Context = context;
         DbSet = context.Set<TEntity>();
-        _validator = validator;
+        Validator = validator;
     }
         
     public virtual async Task<List<TEntity>> GetAllAsync()
@@ -67,16 +69,6 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         await Context.SaveChangesAsync();
     }
 
-    public virtual Task<Guid?> GetPreviousIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public virtual Task<Guid?> GetNextIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
     public virtual async Task<TEntity?> GetByExternalIdAsync(string externalId)
     {
         return await DbSet.FirstOrDefaultAsync(e => e.ExternalId == externalId);
@@ -84,9 +76,9 @@ public class EntityService<TEntity> : IEntityService<TEntity>
     
     protected virtual async Task ValidateOrThrowAsync(TEntity entity, string? ruleSet = null, CancellationToken ct = default)
     {
-        if (_validator is null) return; // no validator registered for TEntity
+        if (Validator is null) return; // no validator registered for TEntity
 
-        ValidationResult result = await _validator.ValidateAsync(entity, opts =>
+        ValidationResult result = await Validator.ValidateAsync(entity, opts =>
         {
             if (!string.IsNullOrWhiteSpace(ruleSet))
             {

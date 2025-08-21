@@ -128,16 +128,6 @@ public class UserService : IEntityService<User>
         throw new NotImplementedException();
     }
 
-    public Task<Guid?> GetPreviousIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Guid?> GetNextIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task<User?> GetByExternalIdAsync(string externalId)
     {
         throw new NotImplementedException();
