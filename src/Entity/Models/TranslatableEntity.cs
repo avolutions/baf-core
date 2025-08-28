@@ -13,7 +13,7 @@ public abstract class TranslatableEntity<TSelf, TTranslation>
     public ICollection<TTranslation> Translations { get; set; } = new List<TTranslation>();
     
     [NotMapped]
-    public string Value
+    public string Value => Translations.Localized(t => t.Value);
     {
         get
         {
