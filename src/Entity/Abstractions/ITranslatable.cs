@@ -2,7 +2,6 @@
 
 public interface ITranslatable
 {
-    string Key { get; set; }
 }
 
 public interface ITranslatable<TSelf, TTranslation> : ITranslatable
