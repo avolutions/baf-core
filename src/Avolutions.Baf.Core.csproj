@@ -43,4 +43,19 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Identity\Resources\IdentityResources.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>IdentityResources.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Identity\Resources\IdentityResources.de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityResources.de.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
