@@ -8,7 +8,7 @@ namespace Avolutions.Baf.Core.Entity.Models;
 public abstract class TranslatableEntity<TSelf, TTranslation> 
     : EntityBase, ITranslatable<TSelf, TTranslation>
     where TSelf : TranslatableEntity<TSelf, TTranslation>
-    where TTranslation : TranslationEntity<TSelf>
+    where TTranslation : TranslationEntity<TSelf>, new()
 {
     public ICollection<TTranslation> Translations { get; set; } = new List<TTranslation>();
     
