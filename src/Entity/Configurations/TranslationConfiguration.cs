@@ -10,9 +10,7 @@ public class TranslationConfiguration : IModelConfiguration
     public void Configure(ModelBuilder modelBuilder)
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-                     .Where(t => t.ClrType.GetInterfaces()
-                         .Any(i => i.IsGenericType &&
-                                   i.GetGenericTypeDefinition() == typeof(ITranslation<>))))
+                     .Where(t => typeof(ITranslation).IsAssignableFrom(t.ClrType)))
         {
             var clr = entityType.ClrType;
             var builder = modelBuilder.Entity(clr);
@@ -20,11 +18,11 @@ public class TranslationConfiguration : IModelConfiguration
             builder.ToTable(clr.Name.Pluralize());
             
             // Unique one-translation-per-language per parent
-            builder.HasIndex(nameof(ITranslation<object>.ParentId), nameof(ITranslation<object>.Language))
+            builder.HasIndex(nameof(ITranslation.ParentId), nameof(ITranslation.Language))
                 .IsUnique();
 
             // ISO-2 language code, required
-            builder.Property<string>(nameof(ITranslation<object>.Language))
+            builder.Property<string>(nameof(ITranslation.Language))
                 .HasMaxLength(2)
                 .IsRequired();
         }

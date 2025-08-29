@@ -5,17 +5,26 @@ using Avolutions.Baf.Core.Entity.Extensions;
 
 namespace Avolutions.Baf.Core.Entity.Models;
 
-public abstract class TranslatableEntity<TSelf, TTranslation> 
-    : EntityBase, ITranslatable<TSelf, TTranslation>
-    where TSelf : TranslatableEntity<TSelf, TTranslation>
-    where TTranslation : TranslationEntity<TSelf>, new()
+public abstract class TranslatableEntity<TTranslation> 
+    : EntityBase, ITranslatable<TTranslation>
+    where TTranslation : TranslationEntity, new()
 {
+    protected TranslatableEntity() { }
+
+    protected TranslatableEntity(bool createMissingTranslations)
+    {
+        if (createMissingTranslations)
+        {
+            CreateMissingTranslations();
+        }
+    }
+    
     public ICollection<TTranslation> Translations { get; set; } = new List<TTranslation>();
     
     [NotMapped]
     public string Value => Translations.Localized(t => t.Value);
     
-    public void CreateDefaultTranslation()
+    public void CreateMissingTranslations()
     {
         if (Translations.Count > 0)
         {
