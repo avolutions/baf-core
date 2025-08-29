@@ -48,6 +48,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>IdentityResources.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResources.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResources.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +59,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>IdentityResources.de.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResources.de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResources.de.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 

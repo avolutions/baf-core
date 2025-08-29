@@ -30,8 +30,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddBafCore<TContext>(this IServiceCollection services, params Assembly[] assemblies)
         where TContext : BafDbContext
     {
-        services.AddLocalization(options => options.ResourcesPath = "");
-        
         services.TryAddScoped<DbContext>(sp => sp.GetRequiredService<TContext>());
         services.TryAddScoped<BafDbContext>(sp => sp.GetRequiredService<TContext>());
         
@@ -45,7 +43,7 @@ public static class ServiceCollectionExtensions
 
         // Store discovered modules for UseBaf()
         services.AddSingleton(new BafModuleCatalog(modules));
-
+        
         return services;
     }
     
