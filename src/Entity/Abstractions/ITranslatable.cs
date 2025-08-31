@@ -2,13 +2,11 @@
 
 public interface ITranslatable
 {
-    string Key { get; set; }
+    string Value { get; }
 }
 
-public interface ITranslatable<TSelf, TTranslation> : ITranslatable
-    where TSelf : ITranslatable<TSelf, TTranslation>
-    where TTranslation : ITranslation<TSelf>
+public interface ITranslatable<TTranslation> : ITranslatable
+    where TTranslation : ITranslation
 {
     ICollection<TTranslation> Translations { get; }
-    string Value { get; }
 }

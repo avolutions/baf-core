@@ -1,5 +1,8 @@
 # Avolutions BAF Core
 
+[![NuGet Version](https://img.shields.io/nuget/v/Avolutions.Baf.Core)](https://www.nuget.org/packages/Avolutions.Baf.Core)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Avolutions.Baf.Core)](https://www.nuget.org/packages/Avolutions.Baf.Core)
+
 Core library for the Avolutions Business Application Framework (BAF).
 
 ## Installation

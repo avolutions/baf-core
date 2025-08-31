@@ -43,7 +43,7 @@ public static class ServiceCollectionExtensions
 
         // Store discovered modules for UseBaf()
         services.AddSingleton(new BafModuleCatalog(modules));
-
+        
         return services;
     }
     

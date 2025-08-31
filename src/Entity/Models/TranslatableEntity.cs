@@ -1,26 +1,41 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Entity.Extensions;
 
 namespace Avolutions.Baf.Core.Entity.Models;
 
-public abstract class TranslatableEntity<TSelf, TTranslation> 
-    : EntityBase, ITranslatable<TSelf, TTranslation>
-    where TSelf : TranslatableEntity<TSelf, TTranslation>
-    where TTranslation : TranslationEntity<TSelf>
+public abstract class TranslatableEntity<TTranslation> 
+    : EntityBase, ITranslatable<TTranslation>
+    where TTranslation : TranslationEntity, new()
 {
-    public required string Key { get; set; }
+    protected TranslatableEntity() { }
+
+    protected TranslatableEntity(bool createMissingTranslations)
+    {
+        if (createMissingTranslations)
+        {
+            CreateMissingTranslations();
+        }
+    }
+    
     public ICollection<TTranslation> Translations { get; set; } = new List<TTranslation>();
     
     [NotMapped]
-    public string Value
+    public string Value => Translations.Localized(t => t.Value);
+    
+    public void CreateMissingTranslations()
     {
-        get
+        if (Translations.Count > 0)
         {
-            var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-
-            return Translations.FirstOrDefault(t => t.Language.Equals(lang, StringComparison.OrdinalIgnoreCase))?.Value
-                   ?? Key;
+            return;
         }
+
+        var defaultTranslation = new TTranslation
+        {
+            Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant()
+        };
+
+        Translations.Add(defaultTranslation);
     }
 }

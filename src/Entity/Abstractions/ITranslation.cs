@@ -1,9 +1,8 @@
 ﻿namespace Avolutions.Baf.Core.Entity.Abstractions;
 
-public interface ITranslation<TParent>
+public interface ITranslation
 {
-    Guid ParentId { get; set; }
-    TParent Parent { get; set; }
     string Language { get; set; }
+    Guid ParentId { get; set; }
     string Value { get; set; }
 }

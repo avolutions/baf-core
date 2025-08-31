@@ -16,9 +16,6 @@ public class TranslatableConfiguration : IModelConfiguration
             var builder = modelBuilder.Entity(clr);
             
             builder.ToTable(clr.Name.Pluralize());
-            
-            builder.HasIndex(nameof(ITranslatable.Key))
-                .IsUnique();
         }
     }
 }

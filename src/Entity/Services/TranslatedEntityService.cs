@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Avolutions.Baf.Core.Entity.Services;
 
 public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITranslatableEntityService<T, TTranslation>
-    where T : class, ITranslatable<T, TTranslation>, IEntity
-    where TTranslation : class, ITranslation<T>
+    where T : class, ITranslatable<TTranslation>, IEntity
+    where TTranslation : class, ITranslation
 {
     public TranslatableEntityService(DbContext context) : base(context)
     {
