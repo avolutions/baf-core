@@ -13,9 +13,22 @@ public class TranslatableConfiguration : IModelConfiguration
                      .Where(t => typeof(ITranslatable).IsAssignableFrom(t.ClrType)))
         {
             var clr = entityType.ClrType;
+            var translationClr  = clr.GetInterfaces()
+                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ITranslatable<>))
+                .GetGenericArguments()[0];
+            
             var builder = modelBuilder.Entity(clr);
             
             builder.ToTable(clr.Name.Pluralize());
+            
+            builder.HasMany(translationClr, navigationName: nameof(ITranslatable<ITranslation>.Translations))
+                .WithOne()
+                .HasForeignKey("ParentId")
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.Navigation(nameof(ITranslatable<ITranslation>.Translations))
+                .AutoInclude();
         }
     }
 }

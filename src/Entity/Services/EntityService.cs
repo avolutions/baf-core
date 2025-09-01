@@ -52,7 +52,7 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         
         await ValidateOrThrowAsync(entity, RuleSets.Update);
 
-        Context.Entry(entity).State = EntityState.Modified;
+        DbSet.Update(entity);
         await Context.SaveChangesAsync();
         return entity;
     }
