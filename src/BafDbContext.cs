@@ -61,13 +61,14 @@ public class BafDbContext : IdentityDbContext<User, Role, Guid>
     {
         // Apply any configuration from base classes
         base.OnModelCreating(modelBuilder);
-        
-        var bafAssembly = typeof(BafDbContext).Assembly;
-        
-        // Model-level configs
-        modelBuilder.ApplyModelConfigurationsFromAssembly(bafAssembly);
 
-        // Per-entity configs
-        modelBuilder.ApplyConfigurationsFromAssembly(bafAssembly);
+        foreach (var assembly in BafAssemblyRegistry.GetAssemblies().Distinct())
+        {
+            // Model-level configs
+            modelBuilder.ApplyModelConfigurationsFromAssembly(assembly);
+            
+            // Per-entity configs
+            modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+        }
     }
 }

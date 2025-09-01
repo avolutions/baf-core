@@ -24,4 +24,25 @@
     <data name="action.edit" xml:space="preserve">
         <value>{0} bearbeiten</value>
     </data>
+    <data name="button.cancel" xml:space="preserve">
+        <value>abbrechen</value>
+    </data>
+    <data name="button.delete" xml:space="preserve">
+        <value>löschen</value>
+    </data>
+    <data name="action.delete" xml:space="preserve">
+        <value>{0} löschen</value>
+    </data>
+    <data name="button.save" xml:space="preserve">
+        <value>speichern</value>
+    </data>
+    <data name="button.back" xml:space="preserve">
+        <value>zurück</value>
+    </data>
+    <data name="button.no" xml:space="preserve">
+        <value>nein</value>
+    </data>
+    <data name="button.yes" xml:space="preserve">
+        <value>yes</value>
+    </data>
 </root>
