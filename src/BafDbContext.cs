@@ -1,7 +1,6 @@
-﻿using Avolutions.Baf.Core.Identity.Models;
-using Avolutions.Baf.Core.Module.Extensions;
+﻿using Avolutions.Baf.Core.Audit.Models;
+using Avolutions.Baf.Core.Identity.Models;
 using Avolutions.Baf.Core.NumberSequences.Models;
-using Avolutions.Baf.Core.Persistence.Abstractions;
 using Avolutions.Baf.Core.Persistence.Extensions;
 using Avolutions.Baf.Core.Settings.Models;
 using Avolutions.Baf.Core.Setup.Models;
@@ -25,6 +24,7 @@ namespace Avolutions.Baf.Core;
 /// </summary>
 public class BafDbContext : IdentityDbContext<User, Role, Guid>
 {
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<NumberSequence> NumberSequences => Set<NumberSequence>();
     public DbSet<Setting> Settings => Set<Setting>();
     public DbSet<SetupStatus> SetupStatus => Set<SetupStatus>();

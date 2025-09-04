@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Avolutions.Baf.Core.Audit.Interceptors;
 using Avolutions.Baf.Core.Entity.Interceptors;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +50,9 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<TContext>((sp, options) =>
         {
             options.AddInterceptors(
-                sp.GetRequiredService<TrackableSaveChangesInterceptor>());
+                sp.GetRequiredService<TrackableSaveChangesInterceptor>(),
+                sp.GetRequiredService<AuditSaveChangesInterceptor>()
+                );
         });
         
         return services;
