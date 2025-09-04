@@ -8,7 +8,7 @@ public static class ApplicationBuilderExtensions
     public static WebApplication UseBafCore(this WebApplication app)
     {
         // Retrieve module catalog populated by AddBafCore()
-        var catalog = app.Services.GetService<ServiceCollectionExtensions.BafModuleCatalog>();
+        var catalog = app.Services.GetService<BafRegistry>();
         if (catalog is null)
         {
             // No modules registered

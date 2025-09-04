@@ -1,4 +1,5 @@
 ﻿using Avolutions.Baf.Core.Identity.Models;
+using Avolutions.Baf.Core.Module.Extensions;
 using Avolutions.Baf.Core.NumberSequences.Models;
 using Avolutions.Baf.Core.Persistence.Abstractions;
 using Avolutions.Baf.Core.Persistence.Extensions;
@@ -62,7 +63,8 @@ public class BafDbContext : IdentityDbContext<User, Role, Guid>
         // Apply any configuration from base classes
         base.OnModelCreating(modelBuilder);
 
-        foreach (var assembly in BafAssemblyRegistry.GetAssemblies().Distinct())
+        var catalog = this.GetService<BafRegistry>();
+        foreach (var assembly in catalog.Assemblies)
         {
             // Model-level configs
             modelBuilder.ApplyModelConfigurationsFromAssembly(assembly);
