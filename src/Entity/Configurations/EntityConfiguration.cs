@@ -21,20 +21,20 @@ public class EntityConfiguration : IModelConfiguration
         
         // Apply default values to all IAuditable entities
         foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-                     .Where(t => typeof(IAuditable).IsAssignableFrom(t.ClrType)))
+                     .Where(t => typeof(ITrackable).IsAssignableFrom(t.ClrType)))
         {
             var builder = modelBuilder.Entity(entityType.ClrType);
 
-            builder.Property(nameof(IAuditable.CreatedAt))
+            builder.Property(nameof(ITrackable.CreatedAt))
                 .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
-            builder.Property(nameof(IAuditable.ModifiedAt))
+            builder.Property(nameof(ITrackable.ModifiedAt))
                 .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
-            builder.Property(nameof(IAuditable.CreatedBy))
+            builder.Property(nameof(ITrackable.CreatedBy))
                 .HasDefaultValue(SystemUser.Id);
 
-            builder.Property(nameof(IAuditable.ModifiedBy))
+            builder.Property(nameof(ITrackable.ModifiedBy))
                 .HasDefaultValue(SystemUser.Id);
         }
     }

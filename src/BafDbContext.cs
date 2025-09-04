@@ -30,33 +30,6 @@ public class BafDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<SetupStatus> SetupStatus => Set<SetupStatus>();
     
     public BafDbContext(DbContextOptions options) : base(options) {}
-
-    public override int SaveChanges()
-    {
-        return SaveChangesAsync().GetAwaiter().GetResult();
-    }
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {   
-        var hooks = (this.GetService<IEnumerable<ISaveChangesHook>>() ?? [])
-            .OrderBy(h => h.Order)
-            .ThenBy(h => h.GetType().FullName)
-            .ToArray();
-        
-        foreach (var hook in hooks)
-        {
-            await hook.OnBeforeSaveChanges(this, cancellationToken);
-        }
-        
-        var rows = await base.SaveChangesAsync(cancellationToken);
-        
-        foreach (var hook in hooks.Reverse())
-        {
-            await hook.OnAfterSaveChanges(this, rows, cancellationToken);
-        }
-        
-        return rows;
-    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

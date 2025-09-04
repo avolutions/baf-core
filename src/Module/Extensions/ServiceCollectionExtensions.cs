@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Avolutions.Baf.Core.Entity.Interceptors;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,13 @@ public static class ServiceCollectionExtensions
 
         // Store discovered modules and their assemblies for later use
         services.AddSingleton(new BafRegistry(modules, moduleAssemblies));
+        
+        // Add database context interceptors
+        services.AddDbContext<TContext>((sp, options) =>
+        {
+            options.AddInterceptors(
+                sp.GetRequiredService<TrackableSaveChangesInterceptor>());
+        });
         
         return services;
     }

@@ -1,4 +1,5 @@
 ﻿using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Entity.Interceptors;
 using Avolutions.Baf.Core.Entity.Services;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,5 +12,6 @@ public class EntityModule : IFeatureModule
     {
         services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
         services.AddScoped(typeof(ITranslatableEntityService<,>), typeof(TranslatableEntityService<,>));
+        services.AddScoped<TrackableSaveChangesInterceptor>();
     }
 }
