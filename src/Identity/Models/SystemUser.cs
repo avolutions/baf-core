@@ -7,6 +7,7 @@
 public static class SystemUser
 {
     public static readonly Guid Id = Guid.Parse("4bd320c0-8ff1-429e-a2f9-913f9db556b9");
+    public const string Lastname = "System";
     public const string UserName = "system";
     public const string NormalizedUserName = "SYSTEM";
     public const string Email = "system@local";

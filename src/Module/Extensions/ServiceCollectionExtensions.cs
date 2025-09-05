@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Avolutions.Baf.Core.Audit.Interceptors;
+using Avolutions.Baf.Core.Entity.Interceptors;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +21,7 @@ public static class ServiceCollectionExtensions
     /// Each discovered module's <see cref="IFeatureModule.Register"/> method is called 
     /// to add its services to the DI container.
     /// 
-    /// The discovered modules are stored in a <see cref="BafModuleCatalog"/> singleton 
+    /// The discovered modules are stored in a <see cref="BafRegistry"/> singleton 
     /// for later use in <c>UseBaf()</c>.
     /// </summary>
     /// <param name="services">The DI service collection.</param>
@@ -32,8 +34,8 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddScoped<DbContext>(sp => sp.GetRequiredService<TContext>());
         services.TryAddScoped<BafDbContext>(sp => sp.GetRequiredService<TContext>());
-        
-        var modules = DiscoverModules(assemblies).ToArray();
+
+        var (modules, moduleAssemblies) = DiscoverModulesAndAssemblies(assemblies);
 
         // Let each module register its own services
         foreach (var module in modules)
@@ -41,19 +43,27 @@ public static class ServiceCollectionExtensions
             module.Register(services);
         }
 
-        // Store discovered modules for UseBaf()
-        services.AddSingleton(new BafModuleCatalog(modules));
+        // Store discovered modules and their assemblies for later use
+        services.AddSingleton(new BafRegistry(modules, moduleAssemblies));
+        
+        // Add database context interceptors
+        services.AddDbContext<TContext>((sp, options) =>
+        {
+            options.AddInterceptors(
+                sp.GetRequiredService<AuditSaveChangesInterceptor>(),
+                sp.GetRequiredService<TrackableSaveChangesInterceptor>()
+            );
+        });
         
         return services;
     }
     
     /// <summary>
-    /// Finds all concrete, non-abstract, non-interface types that implement <see cref="IFeatureModule"/>.
+    /// Finds all concrete types implementing IFeatureModule and returns the created
+    /// instances plus the distinct assemblies that contain at least one such module.
     /// </summary>
-    /// <param name="assemblies">
-    /// Assemblies to search; if null or empty, uses all loaded assemblies in the current AppDomain.
-    /// </param>
-    private static IEnumerable<IFeatureModule> DiscoverModules(Assembly[]? assemblies)
+    private static (IFeatureModule[] Modules, Assembly[] Assemblies)
+        DiscoverModulesAndAssemblies(Assembly[]? assemblies)
     {
         assemblies ??= [];
         if (assemblies.Length == 0)
@@ -61,26 +71,35 @@ public static class ServiceCollectionExtensions
             assemblies = AppDomain.CurrentDomain.GetAssemblies();
         }
 
-        return assemblies
+        var moduleTypes = assemblies
             .SelectMany(a =>
             {
-                try { return a.GetTypes(); }
-                catch (ReflectionTypeLoadException ex) 
-                { 
-                    // If some types can't be loaded, skip the null ones
-                    return ex.Types.Where(t => t is not null)!; 
+                try
+                {
+                    return a.GetTypes();
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    return ex.Types.Where(t => t is not null)!;
                 }
             })
             .Where(t => t is not null
                         && typeof(IFeatureModule).IsAssignableFrom(t)
-                        && !t!.IsAbstract 
+                        && !t!.IsAbstract
                         && !t.IsInterface)
-            .Select(t => Activator.CreateInstance(t!) as IFeatureModule)
-            .Where(m => m is not null)!;
-    }
+            .ToArray()!;
 
-    /// <summary>
-    /// Internal catalog storing all discovered modules for later retrieval.
-    /// </summary>
-    internal sealed record BafModuleCatalog(IFeatureModule[] Modules);
+        var modules = moduleTypes
+                .Select(t => Activator.CreateInstance(t!) as IFeatureModule)
+                .Where(m => m is not null)
+                .Cast<IFeatureModule>()
+                .ToArray();
+            
+        var distinctAssemblies = moduleTypes
+            .Select(t => t.Assembly)
+            .Distinct()
+            .ToArray();
+        
+        return (modules, distinctAssemblies);
+    }
 }

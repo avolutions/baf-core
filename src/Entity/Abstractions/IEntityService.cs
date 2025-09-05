@@ -3,7 +3,7 @@
 public interface IEntityService<TEntity>
     where TEntity : IEntity
 {
-    Task<List<TEntity>> GetAllAsync();
+    Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(Guid id);
     Task<TEntity> CreateAsync(TEntity entity);
     Task<TEntity> UpdateAsync(TEntity entity);

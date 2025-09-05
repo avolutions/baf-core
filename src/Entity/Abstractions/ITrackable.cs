@@ -1,6 +1,6 @@
 ﻿namespace Avolutions.Baf.Core.Entity.Abstractions;
 
-public interface IAuditable
+public interface ITrackable
 {
     /// <summary>
     /// Timestamp when the entity was created (UTC).

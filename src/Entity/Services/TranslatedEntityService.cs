@@ -31,12 +31,12 @@ public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITra
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken: cancellationToken);
     }
 
-    public override async Task<List<T>> GetAllAsync()
+    public override async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await DbSet
             .Include(p => p.Translations)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<List<T>> GetAllAsync(string language, CancellationToken cancellationToken = default)

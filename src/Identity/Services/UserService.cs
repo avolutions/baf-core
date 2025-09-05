@@ -1,5 +1,4 @@
-﻿using Avolutions.Baf.Core.Common;
-using Avolutions.Baf.Core.Entity.Abstractions;
+﻿using Avolutions.Baf.Core.Entity.Abstractions;
 using Avolutions.Baf.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +16,9 @@ public class UserService : IEntityService<User>
         _roleManager = roleManager;
     }
     
-    public async Task<List<User>> GetAllAsync()
+    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var users = await _userManager.Users.ToListAsync();
+        var users = await _userManager.Users.ToListAsync(cancellationToken);
 
         foreach (var user in users)
         {
@@ -73,7 +72,7 @@ public class UserService : IEntityService<User>
             throw new Exception($"The role '{user.RoleName}' does not exist.");
         }
 
-        user.AvatarColor = MaterialColors.GetRandomColor().Background;
+        user.AvatarColor = AvatarColors.GetRandom().Background;
         
         var result = await _userManager.CreateAsync(user, password);
         if (!result.Succeeded)
