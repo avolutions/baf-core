@@ -1,5 +1,4 @@
-﻿using Avolutions.Baf.Core.Common;
-using Avolutions.Baf.Core.Entity.Abstractions;
+﻿using Avolutions.Baf.Core.Entity.Abstractions;
 using Avolutions.Baf.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -73,7 +72,7 @@ public class UserService : IEntityService<User>
             throw new Exception($"The role '{user.RoleName}' does not exist.");
         }
 
-        user.AvatarColor = MaterialColors.GetRandomColor().Background;
+        user.AvatarColor = AvatarColors.GetRandom().Background;
         
         var result = await _userManager.CreateAsync(user, password);
         if (!result.Succeeded)

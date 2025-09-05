@@ -13,6 +13,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasData(new User
         {
             Id = SystemUser.Id,
+            Lastname = SystemUser.Lastname,
             UserName = SystemUser.UserName,
             NormalizedUserName = SystemUser.NormalizedUserName,
             Email = SystemUser.Email,
