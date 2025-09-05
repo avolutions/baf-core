@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Nodes;
-using Avolutions.Baf.Core.Audit.Models;
+﻿using Avolutions.Baf.Core.Audit.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

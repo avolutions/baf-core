@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Nodes;
-using Avolutions.Baf.Core.Entity.Models;
+﻿using Avolutions.Baf.Core.Entity.Models;
 
 namespace Avolutions.Baf.Core.Audit.Models;
 

@@ -50,9 +50,9 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<TContext>((sp, options) =>
         {
             options.AddInterceptors(
-                sp.GetRequiredService<TrackableSaveChangesInterceptor>(),
-                sp.GetRequiredService<AuditSaveChangesInterceptor>()
-                );
+                sp.GetRequiredService<AuditSaveChangesInterceptor>(),
+                sp.GetRequiredService<TrackableSaveChangesInterceptor>()
+            );
         });
         
         return services;
