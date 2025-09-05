@@ -23,9 +23,9 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         Validator = validator;
     }
         
-    public virtual async Task<List<TEntity>> GetAllAsync()
+    public virtual async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await DbSet.ToListAsync();
+        return await DbSet.ToListAsync(cancellationToken);
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id)

@@ -17,9 +17,9 @@ public class UserService : IEntityService<User>
         _roleManager = roleManager;
     }
     
-    public async Task<List<User>> GetAllAsync()
+    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var users = await _userManager.Users.ToListAsync();
+        var users = await _userManager.Users.ToListAsync(cancellationToken);
 
         foreach (var user in users)
         {
