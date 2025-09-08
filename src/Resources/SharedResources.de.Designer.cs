@@ -132,7 +132,7 @@ namespace Avolutions.Baf.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to yes.
+        ///   Looks up a localized string similar to ja.
         /// </summary>
         internal static string button_yes {
             get {

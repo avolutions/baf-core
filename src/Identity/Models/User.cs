@@ -16,6 +16,12 @@ public class User : IdentityUser<Guid>, IEntity
     {
         return LockoutEnabled && LockoutEnd > DateTimeOffset.UtcNow;
     }
+
+    public string GetName()
+    {
+        return $"{Firstname} {Lastname}".Trim(); // TODO get from helper
+    }
+
     public string GetInitials()
     {
         if (!string.IsNullOrEmpty(Firstname) && !string.IsNullOrEmpty(Lastname))

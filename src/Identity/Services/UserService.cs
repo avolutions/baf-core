@@ -1,4 +1,5 @@
 ﻿using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Identity.Caching;
 using Avolutions.Baf.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +10,30 @@ public class UserService : IEntityService<User>
 {
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
+    private readonly IUserCache _userCache;
 
-    public UserService(UserManager<User> userManager, RoleManager<Role> roleManager)
+    public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, IUserCache userCache)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _userCache = userCache;
     }
     
     public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var users = await _userManager.Users.ToListAsync(cancellationToken);
+        return await GetAllAsync(false, cancellationToken);
+    }
+    
+    public async Task<List<User>> GetAllAsync(bool includeSystemUser = false, CancellationToken cancellationToken = default)
+    {
+        var query = _userManager.Users.AsQueryable();
+
+        if (!includeSystemUser)
+        {
+            query = query.Where(u => u.UserName != SystemUser.UserName);
+        }
+
+        var users = await query.ToListAsync(cancellationToken);
 
         foreach (var user in users)
         {
@@ -82,6 +97,7 @@ public class UserService : IEntityService<User>
         }
 
         await _userManager.AddToRoleAsync(user, user.RoleName);
+        await _userCache.RefreshAsync();
 
         return user;
     }

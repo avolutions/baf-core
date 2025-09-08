@@ -43,6 +43,6 @@
         <value>nein</value>
     </data>
     <data name="button.yes" xml:space="preserve">
-        <value>yes</value>
+        <value>ja</value>
     </data>
 </root>
