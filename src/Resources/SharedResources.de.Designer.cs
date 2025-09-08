@@ -62,81 +62,81 @@ namespace Avolutions.Baf.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to {0} erstellen.
         /// </summary>
-        internal static string action_create {
+        internal static string Action_Create {
             get {
-                return ResourceManager.GetString("action.create", resourceCulture);
+                return ResourceManager.GetString("Action.Create", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0} löschen.
         /// </summary>
-        internal static string action_delete {
+        internal static string Action_Delete {
             get {
-                return ResourceManager.GetString("action.delete", resourceCulture);
+                return ResourceManager.GetString("Action.Delete", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0} bearbeiten.
         /// </summary>
-        internal static string action_edit {
+        internal static string Action_Edit {
             get {
-                return ResourceManager.GetString("action.edit", resourceCulture);
+                return ResourceManager.GetString("Action.Edit", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to zurück.
         /// </summary>
-        internal static string button_back {
+        internal static string Button_Back {
             get {
-                return ResourceManager.GetString("button.back", resourceCulture);
+                return ResourceManager.GetString("Button.Back", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to abbrechen.
         /// </summary>
-        internal static string button_cancel {
+        internal static string Button_Cancel {
             get {
-                return ResourceManager.GetString("button.cancel", resourceCulture);
+                return ResourceManager.GetString("Button.Cancel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to löschen.
         /// </summary>
-        internal static string button_delete {
+        internal static string Button_Delete {
             get {
-                return ResourceManager.GetString("button.delete", resourceCulture);
+                return ResourceManager.GetString("Button.Delete", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to nein.
         /// </summary>
-        internal static string button_no {
+        internal static string Button_No {
             get {
-                return ResourceManager.GetString("button.no", resourceCulture);
+                return ResourceManager.GetString("Button.No", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to speichern.
         /// </summary>
-        internal static string button_save {
+        internal static string Button_Save {
             get {
-                return ResourceManager.GetString("button.save", resourceCulture);
+                return ResourceManager.GetString("Button.Save", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ja.
         /// </summary>
-        internal static string button_yes {
+        internal static string Button_Yes {
             get {
-                return ResourceManager.GetString("button.yes", resourceCulture);
+                return ResourceManager.GetString("Button.Yes", resourceCulture);
             }
         }
     }

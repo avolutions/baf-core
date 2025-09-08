@@ -62,54 +62,54 @@ namespace Avolutions.Baf.Core.Identity.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Vorname.
         /// </summary>
-        internal static string field_firstname {
+        internal static string Field_Firstname {
             get {
-                return ResourceManager.GetString("field.firstname", resourceCulture);
+                return ResourceManager.GetString("Field.Firstname", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Nachname.
         /// </summary>
-        internal static string field_lastname {
+        internal static string Field_Lastname {
             get {
-                return ResourceManager.GetString("field.lastname", resourceCulture);
+                return ResourceManager.GetString("Field.Lastname", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Passwort.
         /// </summary>
-        internal static string field_password {
+        internal static string Field_Password {
             get {
-                return ResourceManager.GetString("field.password", resourceCulture);
+                return ResourceManager.GetString("Field.Password", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Passwort bestätigen.
         /// </summary>
-        internal static string field_password_confirm {
+        internal static string Field_PasswordConfirm {
             get {
-                return ResourceManager.GetString("field.password-confirm", resourceCulture);
+                return ResourceManager.GetString("Field.PasswordConfirm", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Benutzername.
         /// </summary>
-        internal static string field_username {
+        internal static string Field_Username {
             get {
-                return ResourceManager.GetString("field.username", resourceCulture);
+                return ResourceManager.GetString("Field.Username", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Die eingegebenen Passwörter stimmen nicht überein..
         /// </summary>
-        internal static string validation_password_equal {
+        internal static string Validation_PasswordEqual {
             get {
-                return ResourceManager.GetString("validation.password-equal", resourceCulture);
+                return ResourceManager.GetString("Validation.PasswordEqual", resourceCulture);
             }
         }
     }
