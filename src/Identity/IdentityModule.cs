@@ -12,6 +12,7 @@ public class IdentityModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
+        services.AddScoped<UserService>();
         services.AddScoped<IEntityService<User>, UserService>();
         
         services.AddSingleton<IUserDisplayService, DefaultUserDisplayService>();

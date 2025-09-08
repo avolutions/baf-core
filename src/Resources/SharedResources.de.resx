@@ -18,31 +18,31 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="action.create" xml:space="preserve">
+    <data name="Action.Create" xml:space="preserve">
         <value>{0} erstellen</value>
     </data>
-    <data name="action.edit" xml:space="preserve">
+    <data name="Action.Edit" xml:space="preserve">
         <value>{0} bearbeiten</value>
     </data>
-    <data name="button.cancel" xml:space="preserve">
+    <data name="Button.Cancel" xml:space="preserve">
         <value>abbrechen</value>
     </data>
-    <data name="button.delete" xml:space="preserve">
+    <data name="Button.Delete" xml:space="preserve">
         <value>löschen</value>
     </data>
-    <data name="action.delete" xml:space="preserve">
+    <data name="Action.Delete" xml:space="preserve">
         <value>{0} löschen</value>
     </data>
-    <data name="button.save" xml:space="preserve">
+    <data name="Button.Save" xml:space="preserve">
         <value>speichern</value>
     </data>
-    <data name="button.back" xml:space="preserve">
+    <data name="Button.Back" xml:space="preserve">
         <value>zurück</value>
     </data>
-    <data name="button.no" xml:space="preserve">
+    <data name="Button.No" xml:space="preserve">
         <value>nein</value>
     </data>
-    <data name="button.yes" xml:space="preserve">
-        <value>yes</value>
+    <data name="Button.Yes" xml:space="preserve">
+        <value>ja</value>
     </data>
 </root>

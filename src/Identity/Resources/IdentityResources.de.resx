@@ -18,22 +18,22 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="field.firstname" xml:space="preserve">
+    <data name="Field.Firstname" xml:space="preserve">
         <value>Vorname</value>
     </data>
-    <data name="field.lastname" xml:space="preserve">
+    <data name="Field.Lastname" xml:space="preserve">
         <value>Nachname</value>
     </data>
-    <data name="field.username" xml:space="preserve">
+    <data name="Field.Username" xml:space="preserve">
         <value>Benutzername</value>
     </data>
-    <data name="field.password" xml:space="preserve">
+    <data name="Field.Password" xml:space="preserve">
         <value>Passwort</value>
     </data>
-    <data name="field.password-confirm" xml:space="preserve">
+    <data name="Field.PasswordConfirm" xml:space="preserve">
         <value>Passwort bestätigen</value>
     </data>
-    <data name="validation.password-equal" xml:space="preserve">
+    <data name="Validation.PasswordEqual" xml:space="preserve">
         <value>Die eingegebenen Passwörter stimmen nicht überein.</value>
     </data>
 </root>
