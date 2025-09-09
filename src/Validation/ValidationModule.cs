@@ -9,6 +9,13 @@ public class ValidationModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(Assembly.GetEntryAssembly());
+    }
+
+    public void Register(IServiceCollection services, Assembly[] assemblies)
+    {
+        foreach (var assembly in assemblies)
+        {
+            services.AddValidatorsFromAssembly(assembly);
+        }
     }
 }

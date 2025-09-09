@@ -79,6 +79,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SystemSettingsResources.de.resx</DependentUpon>
     </Compile>
+    <Compile Update="NumberSequences\Resources\NumberSequenceResources.de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NumberSequenceResources.de.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

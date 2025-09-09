@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Avolutions.Baf.Core.Module.Abstractions;
@@ -13,6 +14,9 @@ public interface IFeatureModule
     /// Register services for this module.
     /// </summary>
     void Register(IServiceCollection services);
+    
+    void Register(IServiceCollection services, Assembly[] assemblies)
+        => Register(services);
     
     /// <summary>
     /// Optional pipeline configuration logic.
