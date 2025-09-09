@@ -57,6 +57,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SystemSettingsResources.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="NumberSequences\Resources\NumberSequenceResources.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NumberSequenceResources.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
