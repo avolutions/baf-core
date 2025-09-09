@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Avolutions.Baf.Core</PackageId>
-    <Version>0.8.0</Version>
+    <Version>0.9.0</Version>
 
     <Title>Avolutions BAF Core</Title>
     <Company>Avolutions</Company>
@@ -53,6 +53,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SharedResources.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="SystemSettings\Resources\SystemSettingsResources.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SystemSettingsResources.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="NumberSequences\Resources\NumberSequenceResources.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NumberSequenceResources.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +73,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SharedResources.de.resx</DependentUpon>
+    </Compile>
+    <Compile Update="SystemSettings\Resources\SystemSettingsResources.de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SystemSettingsResources.de.resx</DependentUpon>
+    </Compile>
+    <Compile Update="NumberSequences\Resources\NumberSequenceResources.de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NumberSequenceResources.de.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 

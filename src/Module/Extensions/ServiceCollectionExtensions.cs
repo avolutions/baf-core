@@ -40,7 +40,7 @@ public static class ServiceCollectionExtensions
         // Let each module register its own services
         foreach (var module in modules)
         {
-            module.Register(services);
+            module.Register(services, moduleAssemblies);
         }
 
         // Store discovered modules and their assemblies for later use

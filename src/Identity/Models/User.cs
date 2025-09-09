@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Avolutions.Baf.Core.Identity.Models;
 
-public class User : IdentityUser<Guid>, IEntity
+public class User : IdentityUser<Guid>, IEntity, ITrackable
 {
     public string Firstname { get; set; } = string.Empty;
     public string Lastname { get; set; } = string.Empty;
@@ -37,6 +37,7 @@ public class User : IdentityUser<Guid>, IEntity
                ?? AvatarColors.Default;
         
     }
+
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }
     public DateTime ModifiedAt { get; set; }
