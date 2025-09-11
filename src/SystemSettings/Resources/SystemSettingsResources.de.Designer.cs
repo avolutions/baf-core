@@ -69,7 +69,7 @@ namespace Avolutions.Baf.Core.SystemSettings.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to egt den Namen der Anwendung fest..
+        ///   Looks up a localized string similar to Legt den Namen der Anwendung fest..
         /// </summary>
         internal static string ApplicationTitle_Description {
             get {
