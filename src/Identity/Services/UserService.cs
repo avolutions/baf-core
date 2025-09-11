@@ -75,7 +75,7 @@ public class UserService : IEntityService<User>
         return systemUser;
     }
 
-    public Task<User> CreateAsync(User user)
+    public Task<User> CreateAsync(User user, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
@@ -102,7 +102,7 @@ public class UserService : IEntityService<User>
         return user;
     }
     
-    public async Task<User> UpdateAsync(User user)
+    public async Task<User> UpdateAsync(User user, CancellationToken cancellationToken = default)
     {
         if (!await _roleManager.RoleExistsAsync(user.RoleName))
         {

@@ -6,4 +6,6 @@ public interface ITranslatableEntityService<T, TTranslation> : IEntityService<T>
 {
     Task<T?> GetByIdAsync(Guid id, string language, CancellationToken cancellationToken = default);
     Task<List<T>> GetAllAsync(string language, CancellationToken cancellationToken = default);
+    Task SetDefaultAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<T> GetDefaultAsync(CancellationToken cancellationToken = default);
 }

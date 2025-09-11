@@ -23,7 +23,9 @@ public abstract class TranslatableEntity<TTranslation>
     
     [NotMapped]
     public string Value => Translations.Localized(t => t.Value);
-    
+
+    public bool IsDefault { get; set; }
+
     public void CreateMissingTranslations()
     {
         if (Translations.Count > 0)

@@ -26,6 +26,10 @@ public class TranslatableConfiguration : IModelConfiguration
                 .HasForeignKey("ParentId")
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(nameof(ITranslatable.IsDefault))
+                .IsUnique()
+                .HasFilter("\"IsDefault\" = true");
             
             builder.Navigation(nameof(ITranslatable<ITranslation>.Translations))
                 .AutoInclude();
