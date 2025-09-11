@@ -22,6 +22,6 @@
         <value>Anwendungsname</value>
     </data>
     <data name="ApplicationTitle.Description" xml:space="preserve">
-        <value>egt den Namen der Anwendung fest.</value>
+        <value>Legt den Namen der Anwendung fest.</value>
     </data>
 </root>
