@@ -45,4 +45,7 @@
     <data name="Button.Yes" xml:space="preserve">
         <value>ja</value>
     </data>
+    <data name="Button.Close" xml:space="preserve">
+        <value>schließen</value>
+    </data>
 </root>

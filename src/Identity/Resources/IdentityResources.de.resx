@@ -24,9 +24,6 @@
     <data name="Field.Lastname" xml:space="preserve">
         <value>Nachname</value>
     </data>
-    <data name="Field.Username" xml:space="preserve">
-        <value>Benutzername</value>
-    </data>
     <data name="Field.Password" xml:space="preserve">
         <value>Passwort</value>
     </data>
@@ -35,5 +32,23 @@
     </data>
     <data name="Validation.PasswordEqual" xml:space="preserve">
         <value>Die eingegebenen Passwörter stimmen nicht überein.</value>
+    </data>
+    <data name="Field.Role" xml:space="preserve">
+        <value>Rolle</value>
+    </data>
+    <data name="Role.Administrator" xml:space="preserve">
+        <value>Administrator</value>
+    </data>
+    <data name="Role.User" xml:space="preserve">
+        <value>Benutzer</value>
+    </data>
+    <data name="Field.UserName" xml:space="preserve">
+        <value>Benutzername</value>
+    </data>
+    <data name="Name.Singular" xml:space="preserve">
+        <value>Benutzer</value>
+    </data>
+    <data name="Name.Plural" xml:space="preserve">
+        <value>Benutzer</value>
     </data>
 </root>

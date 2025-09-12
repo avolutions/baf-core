@@ -105,6 +105,15 @@ namespace Avolutions.Baf.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to schließen.
+        /// </summary>
+        internal static string Button_Close {
+            get {
+                return ResourceManager.GetString("Button.Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to löschen.
         /// </summary>
         internal static string Button_Delete {

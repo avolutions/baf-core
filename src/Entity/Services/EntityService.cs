@@ -33,27 +33,27 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         return await DbSet.FindAsync(id);
     }
 
-    public virtual async Task<TEntity> CreateAsync(TEntity entity)
+    public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await ValidateOrThrowAsync(entity, RuleSets.Create);
+        await ValidateOrThrowAsync(entity, RuleSets.Create, cancellationToken);
         
         DbSet.Add(entity);
-        await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TEntity entity)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        var exists = await DbSet.AnyAsync(e => e.Id == entity.Id);
+        var exists = await DbSet.AnyAsync(e => e.Id == entity.Id, cancellationToken: cancellationToken);
         if (!exists)
         {
             throw new EntityNotFoundException(typeof(TEntity), entity.Id);
         }
         
-        await ValidateOrThrowAsync(entity, RuleSets.Update);
+        await ValidateOrThrowAsync(entity, RuleSets.Update, cancellationToken);
 
         DbSet.Update(entity);
-        await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
