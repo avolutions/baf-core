@@ -96,11 +96,56 @@ namespace Avolutions.Baf.Core.Identity.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rolle.
+        /// </summary>
+        internal static string Field_Role {
+            get {
+                return ResourceManager.GetString("Field.Role", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Benutzername.
         /// </summary>
-        internal static string Field_Username {
+        internal static string Field_UserName {
             get {
-                return ResourceManager.GetString("Field.Username", resourceCulture);
+                return ResourceManager.GetString("Field.UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzer.
+        /// </summary>
+        internal static string Name_Plural {
+            get {
+                return ResourceManager.GetString("Name.Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzer.
+        /// </summary>
+        internal static string Name_Singular {
+            get {
+                return ResourceManager.GetString("Name.Singular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Administrator.
+        /// </summary>
+        internal static string Role_Administrator {
+            get {
+                return ResourceManager.GetString("Role.Administrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzer.
+        /// </summary>
+        internal static string Role_User {
+            get {
+                return ResourceManager.GetString("Role.User", resourceCulture);
             }
         }
         
