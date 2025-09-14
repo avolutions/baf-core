@@ -48,4 +48,7 @@
     <data name="Button.Close" xml:space="preserve">
         <value>schließen</value>
     </data>
+    <data name="Action.Add" xml:space="preserve">
+        <value>{0} hinzufügen</value>
+    </data>
 </root>
