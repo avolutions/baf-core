@@ -143,7 +143,7 @@ public class UserService : IEntityService<User>
         throw new NotImplementedException();
     }
 
-    public Task<User?> GetByExternalIdAsync(string externalId)
+    public Task<User?> GetByExternalIdAsync(string externalId, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
