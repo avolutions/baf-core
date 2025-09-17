@@ -60,6 +60,15 @@ namespace Avolutions.Baf.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} hinzufügen.
+        /// </summary>
+        internal static string Action_Add {
+            get {
+                return ResourceManager.GetString("Action.Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} erstellen.
         /// </summary>
         internal static string Action_Create {

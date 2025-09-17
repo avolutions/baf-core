@@ -69,9 +69,9 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         await Context.SaveChangesAsync();
     }
 
-    public virtual async Task<TEntity?> GetByExternalIdAsync(string externalId)
+    public virtual async Task<TEntity?> GetByExternalIdAsync(string externalId, CancellationToken ct = default)
     {
-        return await DbSet.FirstOrDefaultAsync(e => e.ExternalId == externalId);
+        return await DbSet.FirstOrDefaultAsync(e => e.ExternalId == externalId, cancellationToken: ct);
     }
     
     protected virtual async Task ValidateOrThrowAsync(TEntity entity, string? ruleSet = null, CancellationToken ct = default)
