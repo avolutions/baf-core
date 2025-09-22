@@ -2,7 +2,6 @@
 using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Validation.Abstractions;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Entity.Services;
