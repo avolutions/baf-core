@@ -2,7 +2,6 @@
 using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Validation.Abstractions;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Entity.Services;
@@ -76,14 +75,18 @@ public class EntityService<TEntity> : IEntityService<TEntity>
     
     protected virtual async Task ValidateOrThrowAsync(TEntity entity, string? ruleSet = null, CancellationToken ct = default)
     {
-        if (Validator is null) return; // no validator registered for TEntity
+        if (Validator is null) 
+        {
+            return;
+        }
 
-        ValidationResult result = await Validator.ValidateAsync(entity, opts =>
+        var result = await Validator.ValidateAsync(entity, opts =>
         {
             if (!string.IsNullOrWhiteSpace(ruleSet))
             {
-                opts.IncludeRuleSets(ruleSet);
+                opts.IncludeRuleSets(ruleSet, RuleSets.CreateOrUpdate);
             }
+            opts.IncludeRulesNotInRuleSet();
         }, ct);
 
         if (!result.IsValid)
