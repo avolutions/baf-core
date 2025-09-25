@@ -157,5 +157,14 @@ namespace Avolutions.Baf.Core.Resources {
                 return ResourceManager.GetString("Button.Yes", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; darf nicht leer sein..
+        /// </summary>
+        internal static string Validation_Required {
+            get {
+                return ResourceManager.GetString("Validation.Required", resourceCulture);
+            }
+        }
     }
 }
