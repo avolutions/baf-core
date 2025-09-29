@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Import.Abstractions;
 using Avolutions.Baf.Core.Import.Models;
 using CsvHelper;
@@ -66,6 +67,14 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                     else
                     {
                         result.RecordsCreated += await CreateRecordAsync(row, cancellationToken);
+                    }
+                }
+                catch (EntityValidationException ex)
+                {
+                    var rowNumber = csv.Context?.Parser?.Row;
+                    foreach (var failure in ex.Failures)
+                    {
+                        result.Errors.Add(new CsvImportError(failure.ErrorMessage, rowNumber));
                     }
                 }
                 catch (Exception ex)

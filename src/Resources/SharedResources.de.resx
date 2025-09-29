@@ -51,4 +51,7 @@
     <data name="Action.Add" xml:space="preserve">
         <value>{0} hinzufügen</value>
     </data>
+    <data name="Validation.Required" xml:space="preserve">
+        <value>'{0}' darf nicht leer sein.</value>
+    </data>
 </root>
