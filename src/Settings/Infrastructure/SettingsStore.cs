@@ -13,10 +13,12 @@ public class SettingsStore : ISettingsStore
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ConcurrentDictionary<Type, object> _cache = new();
+    private readonly ISettingProtector _protector;
 
-    public SettingsStore(IServiceScopeFactory scopeFactory)
+    public SettingsStore(IServiceScopeFactory scopeFactory, ISettingProtector protector)
     {
         _scopeFactory = scopeFactory;
+        _protector = protector;
     }
 
     public async Task InitializeAsync(CancellationToken ct = default)
@@ -38,23 +40,43 @@ public class SettingsStore : ISettingsStore
             
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                var key = $"{group}.{prop.Name}";
-                var existing = await context.Settings.FirstOrDefaultAsync(x => x.Key == key, cancellationToken: ct);
-
-                if (existing == null)
+                if (!prop.CanRead || !prop.CanWrite)
                 {
-                    var defaultValue = prop.GetValue(instance);
-                    context.Settings.Add(new Setting
+                    continue;
+                }
+                
+                var key = $"{group}.{prop.Name}";
+                var entry = await context.Settings.FirstOrDefaultAsync(x => x.Key == key, cancellationToken: ct);
+
+                var isProtected = prop.PropertyType == typeof(ProtectedSetting);
+                var purpose = $"{group}:{prop.Name}";
+
+                if (entry == null)
+                {
+                    if (isProtected)
                     {
-                        Key = key,
-                        Value = JsonSerializer.Serialize(defaultValue),
-                        Group = group
-                    });
+                        var secret = ProtectedSetting.FromPlain(string.Empty, purpose, _protector);
+                        context.Settings.Add(new Setting { Key = key, Group = group, Value = secret.Cipher });
+                        prop.SetValue(instance, secret);
+                    }
+                    else
+                    {
+                        var defaultValue = prop.GetValue(instance);
+                        var json = JsonSerializer.Serialize(defaultValue);
+                        context.Settings.Add(new Setting { Key = key, Group = group, Value = json });
+                    }
                 }
                 else
                 {
-                    var deserialized = JsonSerializer.Deserialize(existing.Value, prop.PropertyType);
-                    prop.SetValue(instance, deserialized);
+                    if (isProtected)
+                    {
+                        prop.SetValue(instance, new ProtectedSetting(entry.Value, purpose, _protector));
+                    }
+                    else
+                    {
+                        var value = JsonSerializer.Deserialize(entry.Value, prop.PropertyType);
+                        prop.SetValue(instance, value);
+                    }
                 }
             }
             
@@ -85,23 +107,33 @@ public class SettingsStore : ISettingsStore
             }
 
             var key = $"{group}.{prop.Name}";
+            var isProtected = prop.PropertyType == typeof(ProtectedSetting);
+            var purpose = $"{group}:{prop.Name}";
             var value = prop.GetValue(settingsInstance);
-            var json = JsonSerializer.Serialize(value);
 
-            var entry = await context.Settings.FirstOrDefaultAsync(x => x.Key == key, cancellationToken: ct);
-            if (entry == null)
+            string toStore;
+
+            if (isProtected)
             {
-                entry = new Setting
-                {
-                    Key = key,
-                    Group = group,
-                    Value = json
-                };
-                context.Settings.Add(entry);
+                var secret = value as ProtectedSetting
+                             ?? ProtectedSetting.FromPlain(string.Empty, purpose, _protector);
+
+                toStore = secret.Cipher;
+                prop.SetValue(settingsInstance, secret);
             }
             else
             {
-                entry.Value = json;
+                toStore = JsonSerializer.Serialize(value);
+            }
+            
+            var entry = await context.Settings.FirstOrDefaultAsync(x => x.Key == key, cancellationToken: ct);
+            if (entry == null)
+            {
+                context.Settings.Add(new Setting { Key = key, Group = group, Value = toStore });
+            }
+            else
+            {
+                entry.Value = toStore;
             }
         }
 
