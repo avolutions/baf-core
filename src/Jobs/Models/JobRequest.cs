@@ -3,6 +3,5 @@
 public sealed record JobRequest(
     Guid RunId,
     string JobKey,
-    string ParamJson,
-    string? TriggeredBy
+    string ParamJson
 );

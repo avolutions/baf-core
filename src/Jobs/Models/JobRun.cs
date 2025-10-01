@@ -5,7 +5,7 @@ namespace Avolutions.Baf.Core.Jobs.Models;
 public class JobRun : EntityBase
 {
     public string JobKey { get; set; } = default!;
-    public string? TriggeredBy { get; set; }
+    public Guid TriggeredBy { get; set; }
     public DateTimeOffset QueuedAt { get; set; }
     public DateTimeOffset? StartedAt { get; set; }
     public DateTimeOffset? FinishedAt { get; set; }

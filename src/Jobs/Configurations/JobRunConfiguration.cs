@@ -1,4 +1,5 @@
-﻿using Avolutions.Baf.Core.Jobs.Models;
+﻿using Avolutions.Baf.Core.Identity.Models;
+using Avolutions.Baf.Core.Jobs.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,5 +25,10 @@ public class JobRunConfiguration : IEntityTypeConfiguration<JobRun>
         builder.HasIndex(x => x.JobKey);
         
         builder.HasIndex(x => x.QueuedAt);
+        
+        builder.HasIndex(x => x.TriggeredBy);
+        
+        builder.Property(x => x.TriggeredBy)
+            .HasDefaultValue(SystemUser.Id);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Threading.Channels;
+using Avolutions.Baf.Core.Identity.Models;
 using Avolutions.Baf.Core.Jobs.Abstractions;
 using Avolutions.Baf.Core.Jobs.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,17 @@ public sealed class JobService : IJobService
         _db = db;
     }
 
-    public async Task<Guid> EnqueueAsync<TParam>(string jobKey, TParam param, string? triggeredBy = null, CancellationToken ct = default)
+    public async Task<Guid> EnqueueAsync<TParam>(string jobKey, TParam param, Guid? triggeredBy = null, CancellationToken ct = default)
     {
         var job = _registry.Get(jobKey) ?? throw new InvalidOperationException($"Unknown job '{jobKey}'.");
         var json = JsonSerializer.Serialize(param, job.ParamType);
-
+        var triggerUserId = triggeredBy ?? SystemUser.Id;
+        
         var run = new JobRun
         {
             Id = Guid.NewGuid(),
             JobKey = jobKey,
-            TriggeredBy = triggeredBy,
+            TriggeredBy = triggerUserId,
             QueuedAt = DateTimeOffset.UtcNow,
             Status = JobRunStatus.Queued,
             ParamJson = json
@@ -36,7 +38,7 @@ public sealed class JobService : IJobService
         _db.JobRuns.Add(run);
         await _db.SaveChangesAsync(ct);
 
-        await _channel.Writer.WriteAsync(new JobRequest(run.Id, jobKey, json, triggeredBy), ct);
+        await _channel.Writer.WriteAsync(new JobRequest(run.Id, jobKey, json), ct);
         return run.Id;
     }
 
@@ -48,6 +50,7 @@ public sealed class JobService : IJobService
     public Task<List<JobRun>> GetRecentRunsAsync(int take = 100, string? jobKey = null)
     {
         return _db.JobRuns
+            .AsNoTracking()
             .Where(r => jobKey == null || r.JobKey == jobKey)
             .OrderByDescending(r => r.QueuedAt)
             .Take(take)
