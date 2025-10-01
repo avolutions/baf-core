@@ -132,6 +132,15 @@ namespace Avolutions.Baf.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ausführen.
+        /// </summary>
+        internal static string Button_Execute {
+            get {
+                return ResourceManager.GetString("Button.Execute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to nein.
         /// </summary>
         internal static string Button_No {

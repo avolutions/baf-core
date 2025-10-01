@@ -54,4 +54,7 @@
     <data name="Validation.Required" xml:space="preserve">
         <value>'{0}' darf nicht leer sein.</value>
     </data>
+    <data name="Button.Execute" xml:space="preserve">
+        <value>ausführen</value>
+    </data>
 </root>

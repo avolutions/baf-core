@@ -6,6 +6,7 @@ public interface IJob
 {
     string Key { get; }
     string Name { get; }
+    string Description { get; }
     Type ParamType { get; }
     Task<JobResult> ExecuteAsync(object parameters, CancellationToken ct);
 }

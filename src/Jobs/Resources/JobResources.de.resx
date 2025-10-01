@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Execute" xml:space="preserve">
+        <value>Aufgabe ausführen</value>
+    </data>
+    <data name="Status.Queued" xml:space="preserve">
+        <value>Wartend</value>
+    </data>
+    <data name="Status.Running" xml:space="preserve">
+        <value>Ausführung</value>
+    </data>
+    <data name="Status.Succeeded" xml:space="preserve">
+        <value>Erfolgreich</value>
+    </data>
+    <data name="Status.Failed" xml:space="preserve">
+        <value>Fehlgeschlagen</value>
+    </data>
+    <data name="Status.Canceled" xml:space="preserve">
+        <value>Abgebrochen</value>
+    </data>
+    <data name="Field.Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Field.Description" xml:space="preserve">
+        <value>Beschreibung</value>
+    </data>
+    <data name="UpdateStatus" xml:space="preserve">
+        <value>Status aktualisieren</value>
+    </data>
+    <data name="ExecutedSuccessfully" xml:space="preserve">
+        <value>Die Aufgabe wurde erfolgreich gestartet.</value>
+    </data>
+    <data name="LatestStarted" xml:space="preserve">
+        <value>Letzte Ausführung</value>
+    </data>
+    <data name="LatestStatus" xml:space="preserve">
+        <value>Letzter Status</value>
+    </data>
+    <data name="Field.StartedAt" xml:space="preserve">
+        <value>Gestartet</value>
+    </data>
+    <data name="Field.FinishedAt" xml:space="preserve">
+        <value>Beendet</value>
+    </data>
+    <data name="Field.Status" xml:space="preserve">
+        <value>Status</value>
+    </data>
+    <data name="Field.TriggeredBy" xml:space="preserve">
+        <value>Ausgelöst von</value>
+    </data>
+    <data name="Field.ParamJson" xml:space="preserve">
+        <value>Parameter</value>
+    </data>
+    <data name="Message" xml:space="preserve">
+        <value>Statusmeldung</value>
+    </data>
+    <data name="Field.QueuedAt" xml:space="preserve">
+        <value>Ausgelöst</value>
+    </data>
+    <data name="NoRuns" xml:space="preserve">
+        <value>Die Aufgabe wurde noch nicht ausgeführt.</value>
+    </data>
+</root>
