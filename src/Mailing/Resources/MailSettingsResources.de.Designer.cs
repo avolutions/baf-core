@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Avolutions.Baf.Core.Resources {
+namespace Avolutions.Baf.Core.Mailing.Resources {
     using System;
     
     
@@ -21,14 +21,14 @@ namespace Avolutions.Baf.Core.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SharedResources_de {
+    internal class MailSettingsResources_de {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SharedResources_de() {
+        internal MailSettingsResources_de() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Avolutions.Baf.Core.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Avolutions.Baf.Core.Resources.SharedResources.de", typeof(SharedResources_de).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Avolutions.Baf.Core.Mailing.Resources.MailSettingsResources.de", typeof(MailSettingsResources_de).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,119 +60,92 @@ namespace Avolutions.Baf.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} hinzufügen.
+        ///   Looks up a localized string similar to Absenderadresse.
         /// </summary>
-        internal static string Action_Add {
+        internal static string From {
             get {
-                return ResourceManager.GetString("Action.Add", resourceCulture);
+                return ResourceManager.GetString("From", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} erstellen.
+        ///   Looks up a localized string similar to Die E-Mail-Adresse, die als Absender in ausgehenden E-Mails angezeigt wird..
         /// </summary>
-        internal static string Action_Create {
+        internal static string From_Description {
             get {
-                return ResourceManager.GetString("Action.Create", resourceCulture);
+                return ResourceManager.GetString("From.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} löschen.
+        ///   Looks up a localized string similar to SMTP-Host.
         /// </summary>
-        internal static string Action_Delete {
+        internal static string Host {
             get {
-                return ResourceManager.GetString("Action.Delete", resourceCulture);
+                return ResourceManager.GetString("Host", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} bearbeiten.
+        ///   Looks up a localized string similar to Der Hostname oder die IP-Adresse des ausgehenden Mailservers (SMTP)..
         /// </summary>
-        internal static string Action_Edit {
+        internal static string Host_Description {
             get {
-                return ResourceManager.GetString("Action.Edit", resourceCulture);
+                return ResourceManager.GetString("Host.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to zurück.
+        ///   Looks up a localized string similar to Passwort.
         /// </summary>
-        internal static string Button_Back {
+        internal static string Password {
             get {
-                return ResourceManager.GetString("Button.Back", resourceCulture);
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to abbrechen.
+        ///   Looks up a localized string similar to Das Passwort des SMTP-Benutzerkontos..
         /// </summary>
-        internal static string Button_Cancel {
+        internal static string Password_Description {
             get {
-                return ResourceManager.GetString("Button.Cancel", resourceCulture);
+                return ResourceManager.GetString("Password.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to schließen.
+        ///   Looks up a localized string similar to SMTP-Port.
         /// </summary>
-        internal static string Button_Close {
+        internal static string Port {
             get {
-                return ResourceManager.GetString("Button.Close", resourceCulture);
+                return ResourceManager.GetString("Port", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to löschen.
+        ///   Looks up a localized string similar to Die Portnummer für die Verbindung zum SMTP-Server (meist 587 oder 465).
         /// </summary>
-        internal static string Button_Delete {
+        internal static string Port_Description {
             get {
-                return ResourceManager.GetString("Button.Delete", resourceCulture);
+                return ResourceManager.GetString("Port.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ausführen.
+        ///   Looks up a localized string similar to Benutzername.
         /// </summary>
-        internal static string Button_Execute {
+        internal static string User {
             get {
-                return ResourceManager.GetString("Button.Execute", resourceCulture);
+                return ResourceManager.GetString("User", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to nein.
+        ///   Looks up a localized string similar to Der Benutzername oder die E-Mail-Adresse für die Authentifizierung am SMTP..
         /// </summary>
-        internal static string Button_No {
+        internal static string User_Description {
             get {
-                return ResourceManager.GetString("Button.No", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to speichern.
-        /// </summary>
-        internal static string Button_Save {
-            get {
-                return ResourceManager.GetString("Button.Save", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ja.
-        /// </summary>
-        internal static string Button_Yes {
-            get {
-                return ResourceManager.GetString("Button.Yes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; darf nicht leer sein..
-        /// </summary>
-        internal static string Validation_Required {
-            get {
-                return ResourceManager.GetString("Validation.Required", resourceCulture);
+                return ResourceManager.GetString("User.Description", resourceCulture);
             }
         }
     }

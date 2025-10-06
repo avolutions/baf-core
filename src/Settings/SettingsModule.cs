@@ -9,6 +9,7 @@ public class SettingsModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
+        services.AddSingleton<ISettingProtector, SettingProtector>();
         services.AddSingleton<ISettingsStore, SettingsStore>();
         services.AddSingleton(typeof(ISettings<>), typeof(SettingsAdapter<>));
     }
