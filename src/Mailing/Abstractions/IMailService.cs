@@ -2,7 +2,12 @@
 
 public interface IMailService
 {
-    void Send(string to, string subject, string body, params string[] attachments);
+    Task  SendAsync(
+        string to,
+        string subject,
+        string body,
+        Dictionary<string, byte[]>? attachments = null,
+        CancellationToken ct = default);
 
     Task<(bool Success, string Message)> TryConnectAsync(
         string host,

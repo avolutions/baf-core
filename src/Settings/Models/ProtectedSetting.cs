@@ -32,4 +32,16 @@ public sealed class ProtectedSetting
         var plain = _protector.Unprotect(Cipher, Purpose);
         action(plain);
     }
+    
+    public async Task UseAsync(Func<string, Task> action)
+    {
+        var plain = _protector.Unprotect(Cipher, Purpose);
+        await action(plain);
+    }
+
+    public async Task<T> UseAsync<T>(Func<string, Task<T>> action)
+    {
+        var plain = _protector.Unprotect(Cipher, Purpose);
+        return await action(plain);
+    }
 }
