@@ -10,7 +10,7 @@ namespace Avolutions.Baf.Core.Identity.Extensions;
 
 public static class EndpointRouteBuilderExtensions
 {
-    public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
     {
         ArgumentNullException.ThrowIfNull(endpoints);
 
@@ -23,7 +23,5 @@ public static class EndpointRouteBuilderExtensions
             await signInManager.SignOutAsync();
             return TypedResults.LocalRedirect($"/");
         });
-
-        return accountGroup;
     }
 }
