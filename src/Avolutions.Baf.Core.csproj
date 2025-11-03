@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Avolutions.Baf.Core</PackageId>
-    <Version>0.15.0</Version>
+    <Version>0.16.0</Version>
 
     <Title>Avolutions BAF Core</Title>
     <Company>Avolutions</Company>
