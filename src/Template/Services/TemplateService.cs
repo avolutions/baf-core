@@ -33,17 +33,17 @@ public class TemplateService : ITemplateService
     }
 
     public async Task<byte[]> RenderPdfAsync(
-        string bodyTemplatePath,
+        string bodyTemplate,
         object model,
-        string? headerTemplatePath = null,
-        string? footerTemplatePath = null,
+        string? headerTemplate = null,
+        string? footerTemplate = null,
         CancellationToken ct = default)
     {
         ct.ThrowIfCancellationRequested();
 
-        var bodyHtml = await RenderTemplateFileAsync(bodyTemplatePath, model, ct);
-        var headerHtml  = headerTemplatePath is null ? null : await RenderTemplateFileAsync(headerTemplatePath, model, ct);
-        var footerHtml  = footerTemplatePath is null ? null : await RenderTemplateFileAsync(footerTemplatePath, model, ct);
+        var bodyHtml = await RenderTemplateAsync(bodyTemplate, model, ct);
+        var headerHtml  = headerTemplate is null ? null : await RenderTemplateAsync(headerTemplate, model, ct);
+        var footerHtml  = footerTemplate is null ? null : await RenderTemplateAsync(footerTemplate, model, ct);
         
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -60,14 +60,7 @@ public class TemplateService : ITemplateService
             PrintBackground = true,
             DisplayHeaderFooter = headerHtml is not null || footerHtml is not null,
             HeaderTemplate = headerHtml,
-            FooterTemplate = footerHtml,
-            Margin = new Margin
-            {
-                Top = "30mm",
-                Bottom = "30mm",
-                Left = "12mm",
-                Right = "12mm"
-            }
+            FooterTemplate = footerHtml
         });
 
         return pdf;
