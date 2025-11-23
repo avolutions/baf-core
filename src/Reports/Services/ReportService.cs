@@ -2,6 +2,7 @@
 using Avolutions.Baf.Core.Reports.Abstractions;
 using Avolutions.Baf.Core.Reports.Models;
 using Avolutions.Baf.Core.Template.Abstractions;
+using Avolutions.Baf.Core.Template.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Playwright;
 using NJsonSchema;
@@ -11,9 +12,9 @@ namespace Avolutions.Baf.Core.Reports.Services;
 
 public class ReportService : EntityService<Report>
 {
-    private readonly ITemplateService _templateService;
+    private readonly HandlebarsTemplateService _templateService;
     
-    public ReportService(DbContext context, ITemplateService templateService) : base(context)
+    public ReportService(DbContext context, HandlebarsTemplateService templateService) : base(context)
     {
         _templateService = templateService;
     }
@@ -69,9 +70,9 @@ public class ReportService : EntityService<Report>
     {
         ct.ThrowIfCancellationRequested();
 
-        var contentHtml = await _templateService.RenderTemplateAsync(report.ContentHtml, model, ct);
-        var headerHtml  = await _templateService.RenderTemplateAsync(report.HeaderHtml, model, ct);
-        var footerHtml  = await _templateService.RenderTemplateAsync(report.FooterHtml, model, ct);
+        var contentHtml = await _templateService.ApplyModelToTemplateAsync(report.ContentHtml, model, ct);
+        var headerHtml  = await _templateService.ApplyModelToTemplateAsync(report.HeaderHtml, model, ct);
+        var footerHtml  = await _templateService.ApplyModelToTemplateAsync(report.FooterHtml, model, ct);
         
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions

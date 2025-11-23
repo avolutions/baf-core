@@ -9,6 +9,8 @@ public class TemplateModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
-        services.AddSingleton<ITemplateService, TemplateService>();
+        services.AddSingleton<HandlebarsTemplateService>();
+        services.AddSingleton<PdfTemplateService>();
+        services.AddSingleton<WordTemplateService>();
     }
 }
