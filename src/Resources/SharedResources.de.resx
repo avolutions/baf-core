@@ -57,4 +57,7 @@
     <data name="Button.Execute" xml:space="preserve">
         <value>ausführen</value>
     </data>
+    <data name="Action.Capture" xml:space="preserve">
+        <value>{0} erfassen</value>
+    </data>
 </root>

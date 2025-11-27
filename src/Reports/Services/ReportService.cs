@@ -1,7 +1,6 @@
 ﻿using Avolutions.Baf.Core.Entity.Services;
 using Avolutions.Baf.Core.Reports.Abstractions;
 using Avolutions.Baf.Core.Reports.Models;
-using Avolutions.Baf.Core.Template.Abstractions;
 using Avolutions.Baf.Core.Template.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Playwright;
