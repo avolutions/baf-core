@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using Avolutions.Baf.Core.Entity.Abstractions;
 using Avolutions.Baf.Core.Entity.Extensions;
+using Avolutions.Baf.Core.Localization;
 
 namespace Avolutions.Baf.Core.Entity.Models;
 
@@ -28,16 +28,12 @@ public abstract class TranslatableEntity<TTranslation>
 
     public void CreateMissingTranslations()
     {
-        if (Translations.Count > 0)
+        foreach (var availableLanguage in LocalizationContext.AvailableLanguages)
         {
-            return;
+            if (!Translations.Any(t => t.Language == availableLanguage))
+            {
+                Translations.Add(new TTranslation { Language = availableLanguage });
+            }
         }
-
-        var defaultTranslation = new TTranslation
-        {
-            Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant()
-        };
-
-        Translations.Add(defaultTranslation);
     }
 }
