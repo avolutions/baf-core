@@ -1,4 +1,5 @@
-﻿using Avolutions.Baf.Core.Localization.Settings;
+﻿using System.Globalization;
+using Avolutions.Baf.Core.Localization.Settings;
 
 namespace Avolutions.Baf.Core.Localization;
 
@@ -13,9 +14,14 @@ public static class LocalizationContext
     public static string DefaultLanguage => 
         _defaultLanguage ?? throw new InvalidOperationException("LocalizationContext not initialized");
     
+    public static string CurrentLanguage => 
+        CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
+    
     public static void Initialize(LocalizationSettings settings)
     {
-        _availableLanguages = settings.AvailableLanguages;
-        _defaultLanguage = settings.DefaultLanguage;
+        _availableLanguages = settings.AvailableLanguages
+            .Select(l => l.ToLowerInvariant())
+            .ToList();
+        _defaultLanguage = settings.DefaultLanguage.ToLowerInvariant();
     }
 }

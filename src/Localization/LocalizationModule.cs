@@ -19,10 +19,15 @@ public class LocalizationModule : IFeatureModule
             {
                 var settings = localizationSettings.Value;
                 
-                // Ensure ultimate language fallback
+                // Ensure ultimate fallback
                 if (settings.AvailableLanguages.Count == 0)
                 {
                     settings.AvailableLanguages = ["en"];
+                }
+                
+                if (settings.AvailableCultures.Count == 0)
+                {
+                    settings.AvailableCultures = ["en-US"];
                 }
                 
                 if (string.IsNullOrWhiteSpace(settings.DefaultLanguage))
@@ -30,15 +35,21 @@ public class LocalizationModule : IFeatureModule
                     settings.DefaultLanguage = "en";
                 }
                 
+                if (string.IsNullOrWhiteSpace(settings.DefaultCulture))
+                {
+                    settings.DefaultCulture = "en-US";
+                }
+                
                 // Initialize static BAF context
                 LocalizationContext.Initialize(settings);
                 
-                var cultures = settings.AvailableLanguages
-                    .Select(culture => new CultureInfo(culture)).ToList();
+                var cultures = settings.AvailableCultures
+                    .Select(c => new CultureInfo(c))
+                    .ToList();
 
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures = cultures;
-                options.DefaultRequestCulture = new RequestCulture(settings.DefaultLanguage);
+                options.DefaultRequestCulture = new RequestCulture(settings.DefaultCulture);
                 options.FallBackToParentCultures = true;
                 options.FallBackToParentUICultures = true;
             });
