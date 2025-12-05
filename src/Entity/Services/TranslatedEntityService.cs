@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Avolutions.Baf.Core.Entity.Abstractions;
 using Avolutions.Baf.Core.Entity.Exceptions;
+using Avolutions.Baf.Core.Localization;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,8 +31,7 @@ public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITra
 
     public override async Task<T?> GetByIdAsync(Guid id)
     {
-        var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-        return await GetByIdAsync(id, lang);
+        return await GetByIdAsync(id, LocalizationContext.CurrentLanguage);
     }
 
     public async Task<T?> GetByIdAsync(Guid id, string language, CancellationToken cancellationToken = default)
@@ -39,7 +39,7 @@ public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITra
         return await DbSet
             .Include(p => p.Translations.Where(t => t.Language == language))
             .AsNoTracking()
-            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken: cancellationToken);
+            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
     public override async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -60,27 +60,24 @@ public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITra
 
     public async Task SetDefaultAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var entity = await DbSet.FindAsync([id], cancellationToken);
-        if (entity is null)
+        var exists = await DbSet.AnyAsync(e => e.Id == id, cancellationToken);
+        if (!exists)
         {
             throw new EntityNotFoundException(typeof(T), id);
         }
-        
-        // If it's already the default, nothing to do
-        if (entity.IsDefault)
+    
+        var isAlreadyDefault = await DbSet.AnyAsync(e => e.Id == id && e.IsDefault, cancellationToken);
+        if (isAlreadyDefault)
         {
             return;
         }
-        
-        // Remove default from all units
+    
+        // Clear current default and set new one in single operation
         await DbSet
-            .Where(q => q.IsDefault)
-            .ExecuteUpdateAsync(q => q.SetProperty(x => x.IsDefault, false), cancellationToken: cancellationToken);
-        
-        // Set the new default
-        entity.IsDefault = true;
-        
-        await Context.SaveChangesAsync(cancellationToken);
+            .Where(q => q.IsDefault || q.Id == id)
+            .ExecuteUpdateAsync(
+                q => q.SetProperty(x => x.IsDefault, x => x.Id == id), 
+                cancellationToken);
     }
 
     public Task<T> GetDefaultAsync(CancellationToken cancellationToken = default)

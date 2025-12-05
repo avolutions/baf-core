@@ -28,11 +28,11 @@ public abstract class TranslatableEntity<TTranslation>
 
     public void CreateMissingTranslations()
     {
-        foreach (var availableLanguage in LocalizationContext.AvailableLanguages)
+        foreach (var language in LocalizationContext.AvailableLanguages)
         {
-            if (!Translations.Any(t => t.Language == availableLanguage))
+            if (!Translations.Any(t => t.Language == language))
             {
-                Translations.Add(new TTranslation { Language = availableLanguage });
+                Translations.Add(new TTranslation { Language = language });
             }
         }
     }
