@@ -30,6 +30,9 @@ public class LookupConfiguration : IModelConfiguration
             builder.HasIndex(nameof(ILookup.IsDefault))
                 .IsUnique()
                 .HasFilter("\"IsDefault\" = true");
+            
+            builder.Navigation(nameof(ILookup<ILookupTranslation>.Translations))
+                .AutoInclude();
         }
     }
 }
