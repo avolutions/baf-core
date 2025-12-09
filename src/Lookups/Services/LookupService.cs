@@ -1,22 +1,25 @@
-﻿using System.Globalization;
-using Avolutions.Baf.Core.Entity.Abstractions;
+﻿using Avolutions.Baf.Core.Entity.Abstractions;
 using Avolutions.Baf.Core.Entity.Exceptions;
+using Avolutions.Baf.Core.Entity.Services;
 using Avolutions.Baf.Core.Localization;
+using Avolutions.Baf.Core.Lookups.Abstractions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avolutions.Baf.Core.Entity.Services;
+namespace Avolutions.Baf.Core.Lookups.Services;
 
-public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITranslatableEntityService<T, TTranslation>
-    where T : class, ITranslatable<TTranslation>, IEntity
-    where TTranslation : class, ITranslation
+public class LookupService<T, TTranslation> : EntityService<T>, ILookupService<T>
+    where T : class, ILookup<TTranslation>, IEntity
+    where TTranslation : class, ILookupTranslation
 {
-    public TranslatableEntityService(DbContext context) : base(context)
+    private readonly ILookupCache<T>? _cache;
+    
+    public LookupService(
+        DbContext context,
+        ILookupCache<T>? cache = null,
+        IValidator<T>? validator = null) : base(context, validator)
     {
-    }
-
-    public TranslatableEntityService(DbContext context, IValidator<T>? validator) : base(context, validator)
-    {
+        _cache = cache;
     }
 
     public override async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
@@ -26,7 +29,23 @@ public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITra
             entity.IsDefault = true;
         }
         
-        return await base.CreateAsync(entity, cancellationToken);
+        var result = await base.CreateAsync(entity, cancellationToken);
+        await RefreshCacheAsync(cancellationToken);
+        
+        return result;
+    }
+    
+    public override async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    {
+        var result = await base.UpdateAsync(entity, cancellationToken);
+        await RefreshCacheAsync(cancellationToken);
+        return result;
+    }
+
+    public override async Task DeleteAsync(Guid id)
+    {
+        await base.DeleteAsync(id);
+        await RefreshCacheAsync();
     }
 
     public override async Task<T?> GetByIdAsync(Guid id)
@@ -65,19 +84,28 @@ public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITra
         {
             throw new EntityNotFoundException(typeof(T), id);
         }
-    
+
         var isAlreadyDefault = await DbSet.AnyAsync(e => e.Id == id && e.IsDefault, cancellationToken);
         if (isAlreadyDefault)
         {
             return;
         }
-    
-        // Clear current default and set new one in single operation
+
+        // Clear current default
         await DbSet
-            .Where(q => q.IsDefault || q.Id == id)
+            .Where(q => q.IsDefault)
             .ExecuteUpdateAsync(
-                q => q.SetProperty(x => x.IsDefault, x => x.Id == id), 
+                q => q.SetProperty(x => x.IsDefault, false),
                 cancellationToken);
+
+        // Set new default
+        await DbSet
+            .Where(q => q.Id == id)
+            .ExecuteUpdateAsync(
+                q => q.SetProperty(x => x.IsDefault, true),
+                cancellationToken);
+
+        await RefreshCacheAsync(cancellationToken);
     }
 
     public Task<T> GetDefaultAsync(CancellationToken cancellationToken = default)
@@ -85,5 +113,13 @@ public class TranslatableEntityService<T, TTranslation> : EntityService<T>, ITra
         return DbSet
             .AsNoTracking()
             .SingleAsync(p => p.IsDefault, cancellationToken);
+    }
+    
+    private async Task RefreshCacheAsync(CancellationToken cancellationToken = default)
+    {
+        if (_cache is not null)
+        {
+            await _cache.RefreshAsync(cancellationToken);
+        }
     }
 }

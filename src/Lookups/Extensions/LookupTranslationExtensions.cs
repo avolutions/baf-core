@@ -1,14 +1,14 @@
-﻿using Avolutions.Baf.Core.Entity.Abstractions;
-using Avolutions.Baf.Core.Localization;
+﻿using Avolutions.Baf.Core.Localization;
+using Avolutions.Baf.Core.Lookups.Abstractions;
 
-namespace Avolutions.Baf.Core.Entity.Extensions;
+namespace Avolutions.Baf.Core.Lookups.Extensions;
 
-public static class TranslationExtensions
+public static class LookupTranslationExtensions
 {
     public static string Localized<TTrans>(
         this ICollection<TTrans> translations,
         Func<TTrans, string?> selector)
-        where TTrans : ITranslation
+        where TTrans : ILookupTranslation
     {
         var translation = translations.FirstOrDefault(t => t.Language == LocalizationContext.CurrentLanguage)
                           ?? translations.FirstOrDefault(t => t.Language == LocalizationContext.DefaultLanguage);

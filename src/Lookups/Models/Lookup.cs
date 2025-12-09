@@ -1,17 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Avolutions.Baf.Core.Entity.Abstractions;
-using Avolutions.Baf.Core.Entity.Extensions;
+using Avolutions.Baf.Core.Entity.Models;
 using Avolutions.Baf.Core.Localization;
+using Avolutions.Baf.Core.Lookups.Abstractions;
+using Avolutions.Baf.Core.Lookups.Extensions;
 
-namespace Avolutions.Baf.Core.Entity.Models;
+namespace Avolutions.Baf.Core.Lookups.Models;
 
-public abstract class TranslatableEntity<TTranslation> 
-    : EntityBase, ITranslatable<TTranslation>
-    where TTranslation : TranslationEntity, new()
+public abstract class Lookup<TTranslation> 
+    : EntityBase, ILookup<TTranslation>
+    where TTranslation : LookupTranslation, new()
 {
-    protected TranslatableEntity() { }
+    protected Lookup() { }
 
-    protected TranslatableEntity(bool createMissingTranslations)
+    protected Lookup(bool createMissingTranslations)
     {
         if (createMissingTranslations)
         {

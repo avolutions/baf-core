@@ -11,7 +11,6 @@ public class EntityModule : IFeatureModule
     public void Register(IServiceCollection services)
     {
         services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
-        services.AddScoped(typeof(ITranslatableEntityService<,>), typeof(TranslatableEntityService<,>));
         services.AddScoped<TrackableSaveChangesInterceptor>();
     }
 }
