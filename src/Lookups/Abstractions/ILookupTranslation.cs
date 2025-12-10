@@ -1,6 +1,6 @@
-﻿namespace Avolutions.Baf.Core.Entity.Abstractions;
+﻿namespace Avolutions.Baf.Core.Lookups.Abstractions;
 
-public interface ITranslation
+public interface ILookupTranslation
 {
     string Language { get; set; }
     Guid ParentId { get; set; }

@@ -33,6 +33,8 @@ public static class ApplicationBuilderExtensions
                 .GetResult(); // Blocking is OK here since startup is synchronous
         }
 
+        app.UseRequestLocalization();
+        
         return app;
     }
 }

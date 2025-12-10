@@ -1,33 +1,55 @@
-﻿using Avolutions.Baf.Core.Template.Abstractions;
-using HandlebarsDotNet;
+﻿using System.Reflection;
+using Avolutions.Baf.Core.Template.Abstractions;
+using Avolutions.Baf.Core.Template.Attributes;
 
 namespace Avolutions.Baf.Core.Template.Services;
 
-public class TemplateService : ITemplateService
+public abstract class TemplateService<TTemplate, TResult> : ITemplateService<TTemplate, TResult>
 {
-    public async Task<string> RenderTemplateFileAsync(string templatePath, object model, CancellationToken ct)
+    public Task<TResult> ApplyModelToTemplateAsync(TTemplate template, object model, CancellationToken ct = default)
     {
-        ct.ThrowIfCancellationRequested();
+        ArgumentNullException.ThrowIfNull(template);
+        ArgumentNullException.ThrowIfNull(model);
 
-        if (!Path.IsPathRooted(templatePath))
-        {
-            templatePath = Path.Combine(AppContext.BaseDirectory, templatePath);
-        }
+        var values = BuildValueDictionary(model);
 
-        if (!File.Exists(templatePath))
-        {
-            throw new FileNotFoundException($"Template not found: {templatePath}", templatePath);
-        }
-
-        var source = await File.ReadAllTextAsync(templatePath, ct);
-        
-        return await RenderTemplateAsync(source, model, ct);
+        return ApplyValuesToTemplateAsync(template, values, ct);
     }
-
-    public async Task<string> RenderTemplateAsync(string template, object model, CancellationToken ct)
+    
+    protected abstract Task<TResult> ApplyValuesToTemplateAsync(
+        TTemplate template,
+        IDictionary<string, string> values,
+        CancellationToken ct);
+    
+    protected Dictionary<string, string> BuildValueDictionary(object model)
     {
-        var compiledTemplate = Handlebars.Compile(template);
-        
-        return await Task.FromResult(compiledTemplate(model));
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var type = model.GetType();
+
+        foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (!property.CanRead)
+            {
+                continue;
+            }
+
+            var fieldName = GetDocumentFieldName(property);
+            var value = property.GetValue(model);
+
+            result[fieldName] = value?.ToString() ?? string.Empty;
+        }
+
+        return result;
+    }
+    
+    protected static string GetDocumentFieldName(PropertyInfo property)
+    {
+        var attribute = property.GetCustomAttribute<TemplateFieldAttribute>();
+        if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
+        {
+            return attribute.Name;
+        }
+
+        return property.Name;
     }
 }

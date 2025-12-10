@@ -1,8 +1,6 @@
 ﻿namespace Avolutions.Baf.Core.Template.Abstractions;
 
-public interface ITemplateService
+public interface ITemplateService<in TTemplate, TResult>
 {
-    Task<string> RenderTemplateFileAsync(string templatePath, object model, CancellationToken ct);
-    
-    Task<string> RenderTemplateAsync(string template, object model, CancellationToken ct);
+    Task<TResult> ApplyModelToTemplateAsync(TTemplate template, object model, CancellationToken ct);
 }

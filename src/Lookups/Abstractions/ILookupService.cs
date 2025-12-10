@@ -1,8 +1,9 @@
-﻿namespace Avolutions.Baf.Core.Entity.Abstractions;
+﻿using Avolutions.Baf.Core.Entity.Abstractions;
 
-public interface ITranslatableEntityService<T, TTranslation> : IEntityService<T>
-    where T : class, ITranslatable<TTranslation>, IEntity
-    where TTranslation : class, ITranslation
+namespace Avolutions.Baf.Core.Lookups.Abstractions;
+
+public interface ILookupService<T> : IEntityService<T>
+    where T : class, ILookup, IEntity
 {
     Task<T?> GetByIdAsync(Guid id, string language, CancellationToken cancellationToken = default);
     Task<List<T>> GetAllAsync(string language, CancellationToken cancellationToken = default);
