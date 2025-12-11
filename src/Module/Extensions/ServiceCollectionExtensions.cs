@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Avolutions.Baf.Core.Audit.Interceptors;
 using Avolutions.Baf.Core.Entity.Interceptors;
+using Avolutions.Baf.Core.Lookups.Interceptors;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +52,9 @@ public static class ServiceCollectionExtensions
         {
             options.AddInterceptors(
                 sp.GetRequiredService<AuditSaveChangesInterceptor>(),
-                sp.GetRequiredService<TrackableSaveChangesInterceptor>()
+                sp.GetRequiredService<TrackableSaveChangesInterceptor>(),
+                sp.GetRequiredService<LookupHydrationInterceptor>(),
+                sp.GetRequiredService<LookupSaveChangesInterceptor>()
             );
         });
         
