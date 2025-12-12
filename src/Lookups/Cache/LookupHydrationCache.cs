@@ -64,7 +64,7 @@ public class LookupHydrationCache : ILookupHydrationCache
             var idPropertyName = $"{property.Name}Id";
             var idProperty = entityType.GetProperty(idPropertyName);
 
-            if (idProperty == null || idProperty.PropertyType != typeof(Guid))
+            if (idProperty == null || (idProperty.PropertyType != typeof(Guid) && idProperty.PropertyType != typeof(Guid?)))
             {
                 continue;
             }
@@ -106,7 +106,19 @@ public class LookupHydrationCache : ILookupHydrationCache
         var parameter = Expression.Parameter(typeof(object), "entity");
         var cast = Expression.Convert(parameter, entityType);
         var propertyAccess = Expression.Property(cast, idProperty);
-        var lambda = Expression.Lambda<Func<object, Guid>>(propertyAccess, parameter);
+        
+        Expression result;
+        if (idProperty.PropertyType == typeof(Guid?))
+        {
+            var emptyGuid = Expression.Constant(Guid.Empty);
+            result = Expression.Coalesce(propertyAccess, emptyGuid);
+        }
+        else
+        {
+            result = propertyAccess;
+        }
+
+        var lambda = Expression.Lambda<Func<object, Guid>>(result, parameter);
         return lambda.Compile();
     }
 

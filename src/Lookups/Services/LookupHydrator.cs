@@ -16,13 +16,17 @@ public class LookupHydrator : ILookupHydrator
     {
         var metadata = _hydrationCache.GetMetadata(entity.GetType());
         if (metadata == null)
+        {
             return;
+        }
 
         foreach (var prop in metadata)
         {
             var id = prop.GetId(entity);
             if (id == Guid.Empty)
+            {
                 continue;
+            }
 
             var lookup = prop.GetFromCache(id);
             if (lookup != null)
