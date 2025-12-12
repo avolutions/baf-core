@@ -6,10 +6,48 @@ namespace Avolutions.Baf.Core.Template.Services;
 
 public class WordTemplateService : TemplateService<Stream, byte[]>
 {
-    protected override Task<byte[]> ApplyValuesToTemplateAsync(Stream template, IDictionary<string, string> values, CancellationToken ct)
+    public override IReadOnlyList<string> ExtractFieldNames(Stream template)
+    {
+        var fieldNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        using var document = WordprocessingDocument.Open(template, false);
+        
+        var body = document.MainDocumentPart?.Document.Body;
+        if (body != null)
+        {
+            ExtractMergeFieldNames(body, fieldNames);
+        }
+
+        return fieldNames.ToList();
+    }
+    
+    private static void ExtractMergeFieldNames(OpenXmlElement root, HashSet<string> fieldNames)
+    {
+        foreach (var fieldCode in root.Descendants<FieldCode>())
+        {
+            var instruction = fieldCode.Text;
+            if (string.IsNullOrWhiteSpace(instruction))
+            {
+                continue;
+            }
+
+            if (!instruction.Contains("MERGEFIELD", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var fieldName = ExtractMergeFieldName(instruction);
+            if (fieldName != null)
+            {
+                fieldNames.Add(fieldName);
+            }
+        }
+    }
+
+    public override Task<byte[]> ApplyValuesToTemplateAsync(Stream template, IDictionary<string, string> values, CancellationToken ct)
     {
         // Copy to a writable, seekable stream
-        var output = new MemoryStream();
+        using var output = new MemoryStream();
         template.CopyTo(output);
         output.Position = 0;
         
@@ -21,8 +59,6 @@ public class WordTemplateService : TemplateService<Stream, byte[]>
                 ReplaceMergeFields(body, values);
             }
         }
-
-        output.Position = 0;
         
         return Task.FromResult(output.ToArray());
     }

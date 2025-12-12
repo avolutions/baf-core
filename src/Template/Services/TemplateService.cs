@@ -15,18 +15,21 @@ public abstract class TemplateService<TTemplate, TResult> : ITemplateService<TTe
 
         return ApplyValuesToTemplateAsync(template, values, ct);
     }
-    
-    protected abstract Task<TResult> ApplyValuesToTemplateAsync(
+
+    public abstract IReadOnlyList<string> ExtractFieldNames(Stream template);
+
+    public abstract Task<TResult> ApplyValuesToTemplateAsync(
         TTemplate template,
         IDictionary<string, string> values,
         CancellationToken ct);
     
-    protected Dictionary<string, string> BuildValueDictionary(object model)
+    protected virtual Dictionary<string, string> BuildValueDictionary(object model)
     {
-        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var type = model.GetType();
+        var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+        var result = new Dictionary<string, string>(properties.Length, StringComparer.OrdinalIgnoreCase);
 
-        foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        foreach (var property in properties)
         {
             if (!property.CanRead)
             {

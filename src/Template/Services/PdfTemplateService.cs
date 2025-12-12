@@ -18,8 +18,13 @@ public class PdfTemplateService : TemplateService<Stream, byte[]>
             _fontsConfigured = true;
         }
     }
-    
-    protected override Task<byte[]> ApplyValuesToTemplateAsync(Stream template, IDictionary<string, string> values, CancellationToken ct)
+
+    public override IReadOnlyList<string> ExtractFieldNames(Stream template)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<byte[]> ApplyValuesToTemplateAsync(Stream template, IDictionary<string, string> values, CancellationToken ct)
     {
         using var templateBuffer = new MemoryStream();
         template.CopyTo(templateBuffer);
