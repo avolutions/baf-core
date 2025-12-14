@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Avolutions.Baf.Core.Lookups;
 
-public class Lookups : IFeatureModule
+public class LookupsModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
