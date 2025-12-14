@@ -1,6 +1,8 @@
-﻿namespace Avolutions.Baf.Core.Loading.Services;
+﻿using Avolutions.Baf.Core.Loading.Abstractions;
 
-public class LoadingService
+namespace Avolutions.Baf.Core.Loading.Services;
+
+public class LoadingService : ILoadingService
 {
     private bool _isLoading;
     
@@ -8,19 +10,30 @@ public class LoadingService
     
     public event Action? OnLoadingChanged;
     
-    public void StartLoading()
+    public virtual void StartLoading()
     {
-        if (_isLoading) return;
+        if (_isLoading)
+        {
+            return;
+        }
         
         _isLoading = true;
         OnLoadingChanged?.Invoke();
     }
     
-    public void StopLoading()
+    public virtual void StopLoading()
     {
-        if (!_isLoading) return;
+        if (!_isLoading)
+        {
+            return;
+        }
         
         _isLoading = false;
+        OnLoadingChanged?.Invoke();
+    }
+    
+    protected void NotifyStateChanged()
+    {
         OnLoadingChanged?.Invoke();
     }
 }

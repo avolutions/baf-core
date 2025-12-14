@@ -1,4 +1,5 @@
-﻿using Avolutions.Baf.Core.Loading.Services;
+﻿using Avolutions.Baf.Core.Loading.Abstractions;
+using Avolutions.Baf.Core.Loading.Services;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,7 @@ public class LoadingModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
-        services.AddScoped<LoadingService>();
+        services.AddSingleton<ILoadingService, LoadingService>();
+        services.AddSingleton<IBlockingLoadingService, BlockingLoadingService>();
     }
 }
