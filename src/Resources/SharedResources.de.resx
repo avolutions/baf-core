@@ -60,4 +60,7 @@
     <data name="Action.Capture" xml:space="preserve">
         <value>{0} erfassen</value>
     </data>
+    <data name="Button.Select" xml:space="preserve">
+        <value>auswählen</value>
+    </data>
 </root>

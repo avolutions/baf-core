@@ -168,6 +168,15 @@ namespace Avolutions.Baf.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to auswählen.
+        /// </summary>
+        internal static string Button_Select {
+            get {
+                return ResourceManager.GetString("Button.Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ja.
         /// </summary>
         internal static string Button_Yes {
