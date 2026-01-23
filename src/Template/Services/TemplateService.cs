@@ -6,7 +6,7 @@ namespace Avolutions.Baf.Core.Template.Services;
 
 public abstract class TemplateService<TTemplate, TResult> : ITemplateService<TTemplate, TResult>
 {
-    public Task<TResult> ApplyModelToTemplateAsync(TTemplate template, object model, CancellationToken ct = default)
+    public virtual Task<TResult> ApplyModelToTemplateAsync(TTemplate template, object model, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(template);
         ArgumentNullException.ThrowIfNull(model);

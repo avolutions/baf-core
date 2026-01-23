@@ -1,77 +1,34 @@
-﻿using Avolutions.Baf.Core.Entity.Services;
-using Avolutions.Baf.Core.Reports.Abstractions;
-using Avolutions.Baf.Core.Reports.Models;
+﻿using Avolutions.Baf.Core.Reports.Abstractions;
 using Avolutions.Baf.Core.Template.Services;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
-using NJsonSchema;
-using NJsonSchema.Generation;
 
 namespace Avolutions.Baf.Core.Reports.Services;
 
-public class ReportService : EntityService<Report>
+public class ReportService : IReportService
 {
+    private readonly IServiceProvider _serviceProvider;
     private readonly HandlebarsTemplateService _templateService;
     
-    public ReportService(DbContext context, HandlebarsTemplateService templateService) : base(context)
+    public ReportService(IServiceProvider serviceProvider, HandlebarsTemplateService templateService) 
     {
         _templateService = templateService;
+        _serviceProvider = serviceProvider;
     }
-    
-    public async Task<Report> GetByKeyAsync(string key, CancellationToken ct = default)
+
+    public async Task<byte[]> RenderPdfAsync<TReport>(IReportArgs args, CancellationToken ct = default)
+        where TReport : class, IReport
     {
-        var report = await DbSet.FirstOrDefaultAsync(t => t.Key == key, ct);
-        if (report == null)
-        {
-            throw new InvalidOperationException($"Report with key '{key}' not found.");
-        }
+        var report = ActivatorUtilities.CreateInstance<TReport>(_serviceProvider);
+        var model = await report.BuildModelAsync(args, ct);
         
-        return report;
-    }
-    
-    public async Task<string> GetModelSchemaJsonAsync(string key, CancellationToken ct = default)
-    {
-        var report = await GetByKeyAsync(key, ct);
-        var settings = new SystemTextJsonSchemaGeneratorSettings
-        {
-            FlattenInheritanceHierarchy = true
-        };
-        var schema = JsonSchema.FromType(report.ModelType, settings);
-        
-        return schema.ToJson();
-    }
-    
-    public async Task<IReportModel> BuildModelAsync(Report report, IReportArgs? args, CancellationToken ct = default)
-    {
-        return await report.BuildModelAsync(Context, args, ct);
-    }
-
-    public async Task<IReportModel> BuildDemoAsync(Report report, CancellationToken ct = default)
-    {
-        return await report.BuildDemoAsync(Context, ct);
-    }
-    
-    public async Task<byte[]> RenderPdfAsync(string reportKey, IReportModel model, CancellationToken ct = default)
-    {
-        var report = await GetByKeyAsync(reportKey, ct);
-        return await RenderPdfAsync(report, model, ct);
-    }
-
-    public async Task<byte[]> RenderPdfAsync(string reportKey, IReportArgs? args, CancellationToken ct = default)
-    {
-        var report = await GetByKeyAsync(reportKey, ct);
-        var model = await BuildModelAsync(report, args, ct);
-        
-        return await RenderPdfAsync(report, model, ct);
-    }
-
-    public async Task<byte[]> RenderPdfAsync(Report report, IReportModel model, CancellationToken ct = default)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        var contentHtml = await _templateService.ApplyModelToTemplateAsync(report.ContentHtml, model, ct);
-        var headerHtml  = await _templateService.ApplyModelToTemplateAsync(report.HeaderHtml, model, ct);
-        var footerHtml  = await _templateService.ApplyModelToTemplateAsync(report.FooterHtml, model, ct);
+        var contentHtml = await RenderTemplateAsync(report.ContentTemplatePath, model, ct);
+        var headerHtml = report.HeaderTemplatePath != null
+            ? await RenderTemplateAsync(report.HeaderTemplatePath, model, ct)
+            : "<span></span>";
+        var footerHtml = report.FooterTemplatePath != null
+            ? await RenderTemplateAsync(report.FooterTemplatePath, model, ct)
+            : "<span></span>";
         
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -88,9 +45,31 @@ public class ReportService : EntityService<Report>
             PrintBackground = true,
             DisplayHeaderFooter = true,
             HeaderTemplate = headerHtml,
-            FooterTemplate = footerHtml
+            FooterTemplate = footerHtml,
+            Margin = new Margin
+            {
+                Top = "30mm",
+                Bottom = "30mm",
+                Left = "10mm",
+                Right = "10mm"
+            }
         });
 
         return pdf;
+    }
+    
+    private async Task<string> RenderTemplateAsync(string templatePath, IReportModel model, CancellationToken ct)
+    {
+        var fullPath = Path.IsPathRooted(templatePath)
+            ? templatePath
+            : Path.Combine(AppContext.BaseDirectory, templatePath);
+
+        if (!File.Exists(fullPath))
+        {
+            throw new FileNotFoundException($"Template not found: {fullPath}", fullPath);
+        }
+
+        var template = await File.ReadAllTextAsync(fullPath, ct);
+        return await _templateService.ApplyModelToTemplateAsync(template, model, ct);
     }
 }
