@@ -3,6 +3,7 @@ using System.Threading.Channels;
 using Avolutions.Baf.Core.Identity.Models;
 using Avolutions.Baf.Core.Jobs.Abstractions;
 using Avolutions.Baf.Core.Jobs.Models;
+using Avolutions.Baf.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Jobs.Infrastructure;

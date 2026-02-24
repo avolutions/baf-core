@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Avolutions.Baf.Core;
+namespace Avolutions.Baf.Core.Persistence;
 
 /// <summary>
 /// Base DbContext for the BAF framework.
