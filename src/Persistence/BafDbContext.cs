@@ -3,14 +3,13 @@ using Avolutions.Baf.Core.Identity.Models;
 using Avolutions.Baf.Core.Jobs.Models;
 using Avolutions.Baf.Core.NumberSequences.Models;
 using Avolutions.Baf.Core.Persistence.Extensions;
-using Avolutions.Baf.Core.Reports.Models;
 using Avolutions.Baf.Core.Settings.Models;
 using Avolutions.Baf.Core.Setup.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Avolutions.Baf.Core;
+namespace Avolutions.Baf.Core.Persistence;
 
 /// <summary>
 /// Base DbContext for the BAF framework.
@@ -29,7 +28,6 @@ public class BafDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<JobRun> JobRuns => Set<JobRun>();
     public DbSet<NumberSequence> NumberSequences => Set<NumberSequence>();
-    public DbSet<Report> Reports => Set<Report>();
     public DbSet<Setting> Settings => Set<Setting>();
     public DbSet<SetupStatus> SetupStatus => Set<SetupStatus>();
     

@@ -1,4 +1,5 @@
-﻿using Avolutions.Baf.Core.Setup.Infrastructure;
+﻿using Avolutions.Baf.Core.Persistence;
+using Avolutions.Baf.Core.Setup.Infrastructure;
 using Avolutions.Baf.Core.Setup.Models;
 using Microsoft.EntityFrameworkCore;
 

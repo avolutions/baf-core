@@ -3,6 +3,7 @@ using Avolutions.Baf.Core.Audit.Interceptors;
 using Avolutions.Baf.Core.Entity.Interceptors;
 using Avolutions.Baf.Core.Lookups.Interceptors;
 using Avolutions.Baf.Core.Module.Abstractions;
+using Avolutions.Baf.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -33,6 +34,15 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddBafCore<TContext>(this IServiceCollection services, params Assembly[] assemblies)
         where TContext : BafDbContext
     {
+        // Register a factory alias so framework services (e.g., EntityService<T>) can depend on
+        // IDbContextFactory<BafDbContext> without knowing the concrete context type.
+        // This is the factory equivalent of the scoped DbContext alias below.
+        services.TryAddScoped<IDbContextFactory<BafDbContext>>(sp =>
+            new BafDbContextFactoryWrapper<TContext>(sp.GetRequiredService<IDbContextFactory<TContext>>()));
+
+        // Keep scoped aliases for backward compatibility.
+        // AddDbContextFactory already registers TContext as scoped, so API controllers
+        // and other non-Blazor code that injects DbContext/BafDbContext directly still works.
         services.TryAddScoped<DbContext>(sp => sp.GetRequiredService<TContext>());
         services.TryAddScoped<BafDbContext>(sp => sp.GetRequiredService<TContext>());
 
@@ -48,7 +58,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(new BafRegistry(modules, moduleAssemblies));
         
         // Add database context interceptors
-        services.AddDbContext<TContext>((sp, options) =>
+        services.AddDbContextFactory<TContext>((sp, options) =>
         {
             options.AddInterceptors(
                 sp.GetRequiredService<AuditSaveChangesInterceptor>(),

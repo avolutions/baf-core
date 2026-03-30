@@ -1,61 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Avolutions.Baf.Core.Entity.Models;
-using Avolutions.Baf.Core.Reports.Abstractions;
-using Microsoft.EntityFrameworkCore;
+﻿using Avolutions.Baf.Core.Reports.Abstractions;
 
 namespace Avolutions.Baf.Core.Reports.Models;
 
-public abstract class Report : EntityBase
+public abstract class Report<TModel, TArgs> : IReport
+    where TModel : IReportModel
+    where TArgs : IReportArgs
 {
-    public string Key { get; set; } = string.Empty;
-    public string Json { get; set; } = string.Empty;
-    public string HeaderHtml { get; set; } = string.Empty;
-    public string ContentHtml { get; set; } = string.Empty;
-    public string FooterHtml { get; set; } = string.Empty;
+    private string? _basePath;
 
-    // For tooling / reflection
-    public abstract Type ModelType { get; }
-    public abstract Type ArgsType { get; }
+    private string BasePath => _basePath ??= GetBasePath();
 
-    public abstract Task<IReportModel> BuildModelAsync(
-        DbContext db, IReportArgs? args, CancellationToken ct);
-
-    public abstract Task<IReportModel> BuildDemoAsync(
-        DbContext db, CancellationToken ct);
-}
-
-public abstract class Report<TModel, TArgs> : Report
-    where TModel : class, IReportModel, new()
-    where TArgs  : class, IReportArgs, new()
-{
-    [NotMapped]
-    public TModel? Model { get; private set; }
-
-    public sealed override Type ModelType => typeof(TModel);
-    public sealed override Type ArgsType  => typeof(TArgs);
-
-    protected abstract Task<TModel> BuildTypedModelAsync(
-        DbContext db, TArgs args, CancellationToken ct);
-
-    protected abstract Task<TModel> BuildTypedDemoAsync(
-        DbContext db, CancellationToken ct);
-
-    public sealed override async Task<IReportModel> BuildModelAsync(
-        DbContext db, IReportArgs? args, CancellationToken ct)
+    private string GetBasePath()
     {
-        if (args is not TArgs typed)
+        var ns = GetType().Namespace?.Replace(".", "/") ?? "";
+        var index = ns.IndexOf('/');
+        if (index > 0)
         {
-            throw new ArgumentException(
-                $"Report args must be of type {typeof(TArgs).Name}. " +
-                $"Received {args?.GetType().Name ?? "null"}.", nameof(args));
+            ns = ns[(index + 1)..];
         }
-
-        return await BuildTypedModelAsync(db, typed, ct).ContinueWith<IReportModel>(t => t.Result, ct);
+    
+        return Path.Combine(AppContext.BaseDirectory, ns, "Templates");
     }
 
-    public sealed override async Task<IReportModel> BuildDemoAsync(
-        DbContext db, CancellationToken ct)
-    {
-        return await BuildTypedDemoAsync(db, ct);
-    }
+    protected string TemplatePath(string fileName) => Path.Combine(BasePath, fileName);
+    
+    public abstract string ContentTemplatePath { get; }
+    public virtual string? HeaderTemplatePath => null;
+    public virtual string? FooterTemplatePath => null;
+
+    public abstract Task<TModel> BuildModelAsync(TArgs args, CancellationToken ct = default);
+
+    async Task<IReportModel> IReport.BuildModelAsync(IReportArgs args, CancellationToken ct)
+        => await BuildModelAsync((TArgs)args, ct);
 }
