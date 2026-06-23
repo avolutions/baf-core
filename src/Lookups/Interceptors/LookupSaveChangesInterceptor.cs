@@ -14,24 +14,28 @@ public class LookupSaveChangesInterceptor : SaveChangesInterceptor
         _hydrator = hydrator;
     }
 
-    public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
+    public override InterceptionResult<int> SavingChanges(
+        DbContextEventData eventData, 
+        InterceptionResult<int> result)
     {
         HydrateEntities(eventData.Context);
-        return base.SavedChanges(eventData, result);
+        NeutralizeLookups(eventData.Context);
+        return base.SavingChanges(eventData, result);
     }
-
-    public override ValueTask<int> SavedChangesAsync(
-        SaveChangesCompletedEventData eventData,
-        int result,
+    
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
         HydrateEntities(eventData.Context);
-        return base.SavedChangesAsync(eventData, result, cancellationToken);
+        NeutralizeLookups(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
     private void HydrateEntities(DbContext? context)
     {
-        if (context == null)
+        if (context is null)
         {
             return;
         }
@@ -44,6 +48,23 @@ public class LookupSaveChangesInterceptor : SaveChangesInterceptor
         foreach (var entry in entries)
         {
             _hydrator.Hydrate((IEntity)entry.Entity);
+        }
+    }
+
+    private static void NeutralizeLookups(DbContext? context)
+    {
+        if (context is null)
+        {
+            return;
+        }
+
+        var entries = context.ChangeTracker.Entries()
+            .Where(e => e.Entity is ILookup or ILookupTranslation)
+            .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted);
+        
+        foreach (var entry in entries)
+        {
+            entry.State = EntityState.Unchanged;
         }
     }
 }
