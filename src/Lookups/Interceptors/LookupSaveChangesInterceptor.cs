@@ -42,13 +42,12 @@ public class LookupSaveChangesInterceptor : SaveChangesInterceptor
         }
 
         var entries = context.ChangeTracker.Entries()
-            .Where(e => e.Entity is IEntity)
             .Where(e => e.Entity is not ILookup)
             .Where(e => e.State is EntityState.Added or EntityState.Modified);
 
         foreach (var entry in entries)
         {
-            _hydrator.Hydrate((IEntity)entry.Entity);
+            _hydrator.Hydrate(entry.Entity);
         }
     }
 
