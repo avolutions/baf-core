@@ -30,22 +30,25 @@ public class BafDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<NumberSequence> NumberSequences => Set<NumberSequence>();
     public DbSet<Setting> Settings => Set<Setting>();
     public DbSet<SetupStatus> SetupStatus => Set<SetupStatus>();
-    
+
     public BafDbContext(DbContextOptions options) : base(options) {}
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Apply any configuration from base classes
+        // Identity + any base-class mapping first, so those entities are in the model
+        // before conventions/configs run.
         base.OnModelCreating(modelBuilder);
+
+        var registeredEntityTypes = this.GetRegisteredEntityTypes();
 
         var catalog = this.GetService<BafRegistry>();
         foreach (var assembly in catalog.Assemblies)
         {
-            // Model-level configs
+            // Model-wide conventions (IEntity rules, global filters, etc.) from the whole model.
             modelBuilder.ApplyModelConfigurationsFromAssembly(assembly);
-            
-            // Per-entity configs
-            modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+
+            // Per-entity configs only for types registered via a DbSet.
+            modelBuilder.ApplyConfigurationsForRegisteredTypes(assembly, registeredEntityTypes);
         }
     }
 }

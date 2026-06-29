@@ -1,5 +1,6 @@
 ﻿using Avolutions.Baf.Core.Entity.Abstractions;
 using Avolutions.Baf.Core.Entity.Exceptions;
+using Avolutions.Baf.Core.Persistence;
 using Avolutions.Baf.Core.Validation.Abstractions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -9,17 +10,19 @@ namespace Avolutions.Baf.Core.Entity.Services;
 public class EntityService<TEntity> : IEntityService<TEntity>
     where TEntity : class, IEntity
 {
+    private readonly IDbContextFactory<BafDbContext> _contextFactory;
     protected readonly DbContext Context;
     protected readonly DbSet<TEntity> DbSet;
     protected readonly IValidator<TEntity>? Validator;
 
-    public EntityService(DbContext context) : this(context, null) {}
+    public EntityService(DbContext context, IDbContextFactory<BafDbContext> contextFactory) : this(context, contextFactory, null) {}
         
-    public EntityService(DbContext context, IValidator<TEntity>? validator)
+    public EntityService(DbContext context, IDbContextFactory<BafDbContext> contextFactory, IValidator<TEntity>? validator)
     {
         Context = context;
         DbSet = context.Set<TEntity>();
         Validator = validator;
+        _contextFactory = contextFactory;
     }
         
     public virtual async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)

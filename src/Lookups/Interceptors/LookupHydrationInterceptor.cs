@@ -15,11 +15,7 @@ public class LookupHydrationInterceptor : IMaterializationInterceptor
 
     public object InitializedInstance(MaterializationInterceptionData materializationData, object entity)
     {
-        if (entity is IEntity entityBase)
-        {
-            _hydrator.Hydrate(entityBase);
-        }
-        
+        _hydrator.Hydrate(entity);
         return entity;
     }
 }

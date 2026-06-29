@@ -3,6 +3,7 @@ using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Entity.Services;
 using Avolutions.Baf.Core.Localization;
 using Avolutions.Baf.Core.Lookups.Abstractions;
+using Avolutions.Baf.Core.Persistence;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,8 +17,9 @@ public class LookupService<T, TTranslation> : EntityService<T>, ILookupService<T
     
     public LookupService(
         DbContext context,
+        IDbContextFactory<BafDbContext> contextFactory,
         ILookupCache<T>? cache = null,
-        IValidator<T>? validator = null) : base(context, validator)
+        IValidator<T>? validator = null) : base(context, contextFactory, validator)
     {
         _cache = cache;
     }
