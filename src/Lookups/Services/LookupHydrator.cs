@@ -1,5 +1,4 @@
-﻿using Avolutions.Baf.Core.Entity.Abstractions;
-using Avolutions.Baf.Core.Lookups.Abstractions;
+﻿using Avolutions.Baf.Core.Lookups.Abstractions;
 
 namespace Avolutions.Baf.Core.Lookups.Services;
 
@@ -12,7 +11,7 @@ public class LookupHydrator : ILookupHydrator
         _hydrationCache = hydrationCache;
     }
 
-    public void Hydrate(IEntity entity)
+    public void Hydrate(object entity)
     {
         var metadata = _hydrationCache.GetMetadata(entity.GetType());
         if (metadata == null)
