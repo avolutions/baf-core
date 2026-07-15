@@ -1,9 +1,11 @@
-﻿using DocumentFormat.OpenXml;
+﻿using Avolutions.Baf.Core.Template.Attributes;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Avolutions.Baf.Core.Template.Services;
 
+[TemplateExtension(".docx")]
 public class WordTemplateService : TemplateService<Stream, byte[]>
 {
     public override IReadOnlyList<string> ExtractFieldNames(Stream template)

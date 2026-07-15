@@ -1,4 +1,5 @@
-﻿using PdfSharp;
+﻿using Avolutions.Baf.Core.Template.Attributes;
+using PdfSharp;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.AcroForms;
@@ -6,6 +7,7 @@ using PdfSharp.Pdf.IO;
 
 namespace Avolutions.Baf.Core.Template.Services;
 
+[TemplateExtension(".pdf")]
 public class PdfTemplateService : TemplateService<Stream, byte[]>
 {
     private static bool _fontsConfigured;
@@ -21,7 +23,26 @@ public class PdfTemplateService : TemplateService<Stream, byte[]>
 
     public override IReadOnlyList<string> ExtractFieldNames(Stream template)
     {
-        throw new NotImplementedException();
+        var fieldNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        using var document = PdfReader.Open(template, PdfDocumentOpenMode.Modify);
+
+        var form = document.AcroForm;
+        if (form.Fields.Count == 0)
+        {
+            return [];
+        }
+
+        var fields = form.Fields;
+        foreach (string fieldName in fields.DescendantNames)
+        {
+            if (fields[fieldName] is PdfTextField { ReadOnly: false })
+            {
+                fieldNames.Add(GetSimpleName(fieldName));
+            }
+        }
+
+        return fieldNames.ToList();
     }
 
     public override Task<byte[]> ApplyValuesToTemplateAsync(Stream template, IDictionary<string, string> values, CancellationToken ct)

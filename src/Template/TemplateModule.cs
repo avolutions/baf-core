@@ -1,4 +1,6 @@
 ﻿using Avolutions.Baf.Core.Module.Abstractions;
+using Avolutions.Baf.Core.Template.Abstractions;
+using Avolutions.Baf.Core.Template.Extensions;
 using Avolutions.Baf.Core.Template.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +11,8 @@ public class TemplateModule : IFeatureModule
     public void Register(IServiceCollection services)
     {
         services.AddSingleton<HandlebarsTemplateService>();
-        services.AddSingleton<PdfTemplateService>();
-        services.AddSingleton<WordTemplateService>();
+        services.AddScoped<ITemplateServiceResolver, TemplateServiceResolver>();
+        services.AddTemplateService<PdfTemplateService>();
+        services.AddTemplateService<WordTemplateService>();
     }
 }
