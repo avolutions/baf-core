@@ -1,4 +1,5 @@
 ﻿using Avolutions.Baf.Core.Caching.Abstractions;
+using Avolutions.Baf.Core.Caching.Extensions;
 using Avolutions.Baf.Core.Lookups.Abstractions;
 using Avolutions.Baf.Core.Lookups.Cache;
 using Avolutions.Baf.Core.Lookups.Interceptors;
@@ -12,8 +13,7 @@ public class LookupsModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
-        services.AddSingleton<ILookupHydrationCache, LookupHydrationCache>();
-        services.AddSingleton<ICache>(sp => sp.GetRequiredService<ILookupHydrationCache>());
+        services.AddCache<ILookupHydrationCache, LookupHydrationCache>();
         services.AddSingleton<ILookupHydrator, LookupHydrator>();
         services.AddSingleton<LookupHydrationInterceptor>();
         services.AddSingleton<LookupSaveChangesInterceptor>();
