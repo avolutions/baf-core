@@ -77,7 +77,7 @@ public class LookupHydrationCache : ILookupHydrationCache
                 continue;
             }
 
-            var baseCacheType = typeof(ICache<>).MakeGenericType(property.PropertyType);
+            var baseCacheType = typeof(ICache<,>).MakeGenericType(typeof(Guid), property.PropertyType);
             var getByIdMethod = baseCacheType.GetMethod("GetByIdAsync", [typeof(Guid), typeof(CancellationToken)]);
 
             if (getByIdMethod == null)

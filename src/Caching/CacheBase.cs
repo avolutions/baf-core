@@ -4,25 +4,32 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Avolutions.Baf.Core.Caching;
 
-public abstract class CacheBase<T> : ICache<T>
+public abstract class CacheBase<TKey, T> : ICache<TKey, T>
+    where TKey : notnull
 {
     private readonly SemaphoreSlim _loadLock = new(1, 1);
     private IReadOnlyList<T> _items = [];
-    private ConcurrentDictionary<Guid, T> _itemsById = new();
+    private ConcurrentDictionary<TKey, T> _itemsById;
 
     protected readonly IServiceScopeFactory ScopeFactory;
 
     protected CacheBase(IServiceScopeFactory scopeFactory)
     {
         ScopeFactory = scopeFactory;
+        _itemsById = new ConcurrentDictionary<TKey, T>(KeyComparer);
     }
+
+    /// <summary>
+    /// Override to change key equality, e.g. <see cref="StringComparer.OrdinalIgnoreCase"/>.
+    /// </summary>
+    protected virtual IEqualityComparer<TKey> KeyComparer => EqualityComparer<TKey>.Default;
 
     public Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult(_items);
     }
 
-    public Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public Task<T?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
     {
         _itemsById.TryGetValue(id, out var item);
         return Task.FromResult(item);
@@ -35,7 +42,9 @@ public abstract class CacheBase<T> : ICache<T>
         {
             var items = await LoadAsync(cancellationToken);
             _items = items;
-            _itemsById = new ConcurrentDictionary<Guid, T>(items.ToDictionary(GetId));
+            _itemsById = new ConcurrentDictionary<TKey, T>(
+                items.ToDictionary(GetId, KeyComparer),
+                KeyComparer);
         }
         finally
         {
@@ -45,5 +54,12 @@ public abstract class CacheBase<T> : ICache<T>
 
     protected abstract Task<IReadOnlyList<T>> LoadAsync(CancellationToken cancellationToken);
 
-    protected abstract Guid GetId(T item);
+    protected abstract TKey GetId(T item);
+}
+
+public abstract class CacheBase<T> : CacheBase<Guid, T>, ICache<T>
+{
+    protected CacheBase(IServiceScopeFactory scopeFactory) : base(scopeFactory)
+    {
+    }
 }

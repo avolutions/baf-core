@@ -13,43 +13,19 @@ public class LocalizationModule : IFeatureModule
     public void Register(IServiceCollection services)
     {
         services.AddLocalization(options => options.ResourcesPath = "");
-        
+
         services.AddOptions<RequestLocalizationOptions>()
             .Configure<ISettings<LocalizationSettings>>((options, localizationSettings) =>
             {
-                var settings = localizationSettings.Value;
-                
-                // Ensure ultimate fallback
-                if (settings.AvailableLanguages.Count == 0)
-                {
-                    settings.AvailableLanguages = ["en"];
-                }
-                
-                if (settings.AvailableCultures.Count == 0)
-                {
-                    settings.AvailableCultures = ["en-US"];
-                }
-                
-                if (string.IsNullOrWhiteSpace(settings.DefaultLanguage))
-                {
-                    settings.DefaultLanguage = "en";
-                }
-                
-                if (string.IsNullOrWhiteSpace(settings.DefaultCulture))
-                {
-                    settings.DefaultCulture = "en-US";
-                }
-                
-                // Initialize static BAF context
-                LocalizationContext.Initialize(settings);
-                
-                var cultures = settings.AvailableCultures
-                    .Select(c => new CultureInfo(c))
+                LocalizationContext.Initialize(localizationSettings.Value);
+
+                var cultures = LocalizationContext.AvailableCultures
+                    .Select(culture => new CultureInfo(culture))
                     .ToList();
 
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures = cultures;
-                options.DefaultRequestCulture = new RequestCulture(settings.DefaultCulture);
+                options.DefaultRequestCulture = new RequestCulture(LocalizationContext.DefaultCulture);
                 options.FallBackToParentCultures = true;
                 options.FallBackToParentUICultures = true;
             });

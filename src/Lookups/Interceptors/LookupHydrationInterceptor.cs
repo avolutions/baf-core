@@ -1,5 +1,4 @@
-﻿using Avolutions.Baf.Core.Entity.Abstractions;
-using Avolutions.Baf.Core.Lookups.Abstractions;
+﻿using Avolutions.Baf.Core.Lookups.Abstractions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Avolutions.Baf.Core.Lookups.Interceptors;

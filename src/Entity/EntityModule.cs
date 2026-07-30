@@ -1,4 +1,6 @@
-﻿using Avolutions.Baf.Core.Entity.Abstractions;
+﻿using Avolutions.Baf.Core.Caching.Extensions;
+using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Entity.Cache;
 using Avolutions.Baf.Core.Entity.Interceptors;
 using Avolutions.Baf.Core.Entity.Services;
 using Avolutions.Baf.Core.Module.Abstractions;
@@ -14,5 +16,6 @@ public class EntityModule : IFeatureModule
         services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
         services.TryAddSingleton<TrackableSaveChangesInterceptor>();
         services.AddSingleton(typeof(IEntityRouteProvider<>), typeof(EntityRouteProvider<>));
+        services.AddCache<IEntityInfoCache, EntityInfoCache>();
     }
 }

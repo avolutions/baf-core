@@ -34,7 +34,7 @@ public class PdfTemplateService : TemplateService<Stream, byte[]>
         }
 
         var fields = form.Fields;
-        foreach (string fieldName in fields.DescendantNames)
+        foreach (var fieldName in fields.DescendantNames)
         {
             if (fields[fieldName] is PdfTextField { ReadOnly: false })
             {
@@ -83,7 +83,7 @@ public class PdfTemplateService : TemplateService<Stream, byte[]>
     {
         var fields = form.Fields;
 
-        foreach (string fieldName in fields.DescendantNames)
+        foreach (var fieldName in fields.DescendantNames)
         {
             if (!values.TryGetValue(fieldName, out var value))
             {
