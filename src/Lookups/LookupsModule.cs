@@ -1,5 +1,4 @@
-﻿using Avolutions.Baf.Core.Caching.Abstractions;
-using Avolutions.Baf.Core.Caching.Extensions;
+﻿using Avolutions.Baf.Core.Caching.Extensions;
 using Avolutions.Baf.Core.Lookups.Abstractions;
 using Avolutions.Baf.Core.Lookups.Cache;
 using Avolutions.Baf.Core.Lookups.Interceptors;
