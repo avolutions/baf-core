@@ -159,6 +159,15 @@ namespace Avolutions.Baf.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string Button_Ok {
+            get {
+                return ResourceManager.GetString("Button.Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to speichern.
         /// </summary>
         internal static string Button_Save {

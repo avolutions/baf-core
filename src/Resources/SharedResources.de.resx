@@ -63,4 +63,7 @@
     <data name="Button.Select" xml:space="preserve">
         <value>auswählen</value>
     </data>
+    <data name="Button.Ok" xml:space="preserve">
+        <value>Ok</value>
+    </data>
 </root>

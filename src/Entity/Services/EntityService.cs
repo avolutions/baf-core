@@ -10,7 +10,7 @@ namespace Avolutions.Baf.Core.Entity.Services;
 public class EntityService<TEntity> : IEntityService<TEntity>
     where TEntity : class, IEntity
 {
-    private readonly IDbContextFactory<BafDbContext> _contextFactory;
+    protected readonly IDbContextFactory<BafDbContext> ContextFactory;
     protected readonly DbContext Context;
     protected readonly DbSet<TEntity> DbSet;
     protected readonly IValidator<TEntity>? Validator;
@@ -22,7 +22,7 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         Context = context;
         DbSet = context.Set<TEntity>();
         Validator = validator;
-        _contextFactory = contextFactory;
+        ContextFactory = contextFactory;
     }
         
     public virtual async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)

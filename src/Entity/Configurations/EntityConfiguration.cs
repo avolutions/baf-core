@@ -1,4 +1,5 @@
 ﻿using Avolutions.Baf.Core.Entity.Abstractions;
+using Avolutions.Baf.Core.Entity.Models;
 using Avolutions.Baf.Core.Identity.Models;
 using Avolutions.Baf.Core.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ public class EntityConfiguration : IModelConfiguration
                 .HasIndex(nameof(IEntity.ExternalId));
         }
         
-        // Apply default values to all IAuditable entities
+        // Apply default values to all ITrackable entities
         foreach (var entityType in modelBuilder.Model.GetEntityTypes()
                      .Where(t => typeof(ITrackable).IsAssignableFrom(t.ClrType)))
         {
@@ -36,6 +37,33 @@ public class EntityConfiguration : IModelConfiguration
 
             builder.Property(nameof(ITrackable.ModifiedBy))
                 .HasDefaultValue(SystemUser.Id);
+        }
+        
+        // Apply status mapping to all ILockable entities
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes()
+                     .Where(t => typeof(ILockable).IsAssignableFrom(t.ClrType))
+                     .ToList())
+        {
+            if (entityType.IsOwned())
+            {
+                continue;
+            }
+
+            if (entityType.BaseType is not null
+                && typeof(ILockable).IsAssignableFrom(entityType.BaseType.ClrType))
+            {
+                continue;
+            }
+
+            var builder = modelBuilder.Entity(entityType.ClrType);
+
+            builder.OwnsOne(typeof(EntityLockStatus), nameof(ILockable.LockStatus), lockStatus =>
+            {
+                lockStatus.Property(nameof(EntityLockStatus.Level))
+                    .HasConversion<string>();
+            });
+
+            builder.Navigation(nameof(ILockable.LockStatus)).IsRequired();
         }
     }
 }
