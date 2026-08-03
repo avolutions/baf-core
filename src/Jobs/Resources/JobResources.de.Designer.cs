@@ -105,6 +105,15 @@ namespace Avolutions.Baf.Core.Jobs.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nächste Ausführung.
+        /// </summary>
+        internal static string Field_NextRun {
+            get {
+                return ResourceManager.GetString("Field.NextRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter.
         /// </summary>
         internal static string Field_ParamJson {
@@ -119,6 +128,15 @@ namespace Avolutions.Baf.Core.Jobs.Resources {
         internal static string Field_QueuedAt {
             get {
                 return ResourceManager.GetString("Field.QueuedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeitplan.
+        /// </summary>
+        internal static string Field_Schedule {
+            get {
+                return ResourceManager.GetString("Field.Schedule", resourceCulture);
             }
         }
         
@@ -168,6 +186,15 @@ namespace Avolutions.Baf.Core.Jobs.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manuelle Jobs.
+        /// </summary>
+        internal static string ManualJobs {
+            get {
+                return ResourceManager.GetString("ManualJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Statusmeldung.
         /// </summary>
         internal static string Message {
@@ -182,6 +209,15 @@ namespace Avolutions.Baf.Core.Jobs.Resources {
         internal static string NoRuns {
             get {
                 return ResourceManager.GetString("NoRuns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geplante Jobs.
+        /// </summary>
+        internal static string ScheduledJobs {
+            get {
+                return ResourceManager.GetString("ScheduledJobs", resourceCulture);
             }
         }
         
