@@ -6,4 +6,5 @@ public sealed record JobScheduleInfo(
     string Description,
     TimeZoneInfo TimeZone,
     bool Enabled,
+    bool AllowManualTrigger,
     DateTimeOffset? NextRun);

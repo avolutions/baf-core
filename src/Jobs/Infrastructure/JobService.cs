@@ -38,7 +38,7 @@ public sealed class JobService : IJobService
         var job = _registry.Get(jobKey) ?? throw new InvalidOperationException($"Unknown job '{jobKey}'.");
         var triggerUserId = triggeredBy ?? SystemUser.Id;
 
-        if (!job.IsManuallyTriggerable && triggerUserId != SystemUser.Id)
+        if (triggerUserId != SystemUser.Id && !IsManuallyTriggerable(jobKey))
         {
             throw new InvalidOperationException($"Job '{jobKey}' cannot be triggered manually.");
         }
@@ -59,11 +59,6 @@ public sealed class JobService : IJobService
 
         await _channel.Writer.WriteAsync(new JobRequest(run.Id, jobKey, json), ct);
         return run.Id;
-    }
-
-    public Task<Guid> EnqueueAsync<TParam>(string jobKey, TParam param, Guid? triggeredBy = null, CancellationToken ct = default)
-    {
-        return EnqueueAsync(jobKey, param!, triggeredBy, ct);
     }
 
     public Task<IReadOnlyList<IJob>> GetAvailableJobsAsync()
@@ -128,7 +123,7 @@ public sealed class JobService : IJobService
             }
         }
 
-        return new JobScheduleInfo(jobKey, options.Cron, description, timeZone, options.Enabled, nextRun);
+        return new JobScheduleInfo(jobKey, options.Cron, description, timeZone, options.Enabled, options.AllowManualTrigger, nextRun);
     }
 
     public IReadOnlyList<JobScheduleInfo> GetSchedules()
@@ -138,5 +133,12 @@ public sealed class JobService : IJobService
             .Where(s => s is not null)
             .Select(s => s!)
             .ToList();
+    }
+    
+    public bool IsManuallyTriggerable(string jobKey)
+    {
+        var schedule = GetSchedule(jobKey);
+
+        return schedule is null || schedule.AllowManualTrigger;
     }
 }
