@@ -78,4 +78,16 @@
     <data name="NoRuns" xml:space="preserve">
         <value>Die Aufgabe wurde noch nicht ausgeführt.</value>
     </data>
+    <data name="Field.Schedule" xml:space="preserve">
+        <value>Zeitplan</value>
+    </data>
+    <data name="ScheduledJobs" xml:space="preserve">
+        <value>Geplante Jobs</value>
+    </data>
+    <data name="ManualJobs" xml:space="preserve">
+        <value>Manuelle Jobs</value>
+    </data>
+    <data name="Field.NextRun" xml:space="preserve">
+        <value>Nächste Ausführung</value>
+    </data>
 </root>
