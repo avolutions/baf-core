@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Avolutions.Baf.Core.Colors.Models;
 using Avolutions.Baf.Core.Entity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,7 +9,7 @@ public class User : IdentityUser<Guid>, IEntity, ITrackable
 {
     public string Firstname { get; set; } = string.Empty;
     public string Lastname { get; set; } = string.Empty;
-    public string AvatarColor { get; set; } = AvatarColors.Default.Background;
+    public string AvatarColor { get; set; } = MaterialColors.Grey;
     public string? ExternalId { get; set; }
     [NotMapped]
     public string RoleName { get; set; } = string.Empty;
@@ -20,22 +21,6 @@ public class User : IdentityUser<Guid>, IEntity, ITrackable
     public string GetName()
     {
         return $"{Firstname} {Lastname}".Trim(); // TODO get from helper
-    }
-
-    public string GetInitials()
-    {
-        if (!string.IsNullOrEmpty(Firstname) && !string.IsNullOrEmpty(Lastname))
-        {
-            return $"{Firstname[0]}{Lastname[0]}".ToUpper();
-        }
-        return "";
-    }
-    public AvatarColor GetAvatarColors()
-    {
-        return AvatarColors.Colors
-                   .FirstOrDefault(c => c.Background == AvatarColor)
-               ?? AvatarColors.Default;
-        
     }
 
     public DateTime CreatedAt { get; set; }

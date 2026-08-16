@@ -1,4 +1,5 @@
-﻿using Avolutions.Baf.Core.Identity.Abstractions;
+﻿using Avolutions.Baf.Core.Colors.Models;
+using Avolutions.Baf.Core.Identity.Abstractions;
 using Avolutions.Baf.Core.Identity.Models;
 
 namespace Avolutions.Baf.Core.Identity.Services;
@@ -30,9 +31,8 @@ public class DefaultUserDisplayService : IUserDisplayService
         return string.Empty;
     }
 
-    public AvatarColor GetAvatarColor(User user)
+    public BafColor GetAvatarColor(User user)
     {
-        return AvatarColors.Colors.FirstOrDefault(c => c.Background == user.AvatarColor)
-            ?? AvatarColor.Default;
+        return BafColor.FromBackground(user.AvatarColor);
     }
 }
