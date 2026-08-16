@@ -6,7 +6,6 @@ using Avolutions.Baf.Core.Jobs.Models;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NCronJob;
 
 namespace Avolutions.Baf.Core.Jobs;
