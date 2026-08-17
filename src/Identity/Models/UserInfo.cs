@@ -1,16 +1,18 @@
-﻿namespace Avolutions.Baf.Core.Identity.Models;
+﻿using Avolutions.Baf.Core.Colors.Models;
+
+namespace Avolutions.Baf.Core.Identity.Models;
 
 public sealed record UserInfo(
     Guid Id,
     string Name,
     string Initials,
-    AvatarColor AvatarColor
+    BafColor AvatarColor
 )
 {
     public static readonly UserInfo Unknown = new(
         Guid.Empty,
         "Unknown",
         "?",
-        AvatarColor.Default
+        BafColor.Default
     );
 }
