@@ -15,13 +15,13 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             {
                 Id = Guid.Parse("f16f5123-7897-41d6-8844-e00c1b4b390e"),
                 Name = SystemRoles.Administrator,
-                NormalizedName = SystemRoles.Administrator.ToUpper()
+                NormalizedName = SystemRoles.Administrator.ToUpperInvariant()
             },
             new Role
             {
                 Id = Guid.Parse("580f2ddd-cfb8-4a7c-bd0e-052609b68dcc"),
                 Name = SystemRoles.User,
-                NormalizedName = SystemRoles.User.ToUpper()
+                NormalizedName = SystemRoles.User.ToUpperInvariant()
             }
         );
     }

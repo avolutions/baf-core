@@ -46,7 +46,7 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<DbContext>(sp => sp.GetRequiredService<TContext>());
         services.TryAddScoped<BafDbContext>(sp => sp.GetRequiredService<TContext>());
 
-        var (modules, moduleAssemblies) = DiscoverModulesAndAssemblies(assemblies);
+        var (modules, moduleAssemblies, scannedAssemblies) = DiscoverModulesAndAssemblies(assemblies);
 
         // Let each module register its own services
         foreach (var module in modules)
@@ -55,7 +55,7 @@ public static class ServiceCollectionExtensions
         }
 
         // Store discovered modules and their assemblies for later use
-        services.AddSingleton(new BafRegistry(modules, moduleAssemblies));
+        services.AddSingleton(new BafRegistry(modules, moduleAssemblies, scannedAssemblies));
         
         // Add database context interceptors
         services.AddDbContextFactory<TContext>((sp, options) =>
@@ -75,7 +75,7 @@ public static class ServiceCollectionExtensions
     /// Finds all concrete types implementing IFeatureModule and returns the created
     /// instances plus the distinct assemblies that contain at least one such module.
     /// </summary>
-    private static (IFeatureModule[] Modules, Assembly[] Assemblies)
+    private static (IFeatureModule[] Modules, Assembly[] Assemblies, Assembly[] ScannedAssemblies)
         DiscoverModulesAndAssemblies(Assembly[]? assemblies)
     {
         assemblies ??= [];
@@ -85,22 +85,10 @@ public static class ServiceCollectionExtensions
         }
 
         var moduleTypes = assemblies
-            .SelectMany(a =>
-            {
-                try
-                {
-                    return a.GetTypes();
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    return ex.Types.Where(t => t is not null)!;
-                }
-            })
-            .Where(t => t is not null
-                        && typeof(IFeatureModule).IsAssignableFrom(t)
-                        && !t!.IsAbstract
-                        && !t.IsInterface)
-            .ToArray()!;
+            .SelectMany(assembly => assembly.GetLoadableTypes())
+            .Where(type => typeof(IFeatureModule).IsAssignableFrom(type)
+                           && type is { IsAbstract: false, IsInterface: false })
+            .ToArray();
 
         var modules = moduleTypes
                 .Select(t => Activator.CreateInstance(t!) as IFeatureModule)
@@ -113,6 +101,6 @@ public static class ServiceCollectionExtensions
             .Distinct()
             .ToArray();
         
-        return (modules, distinctAssemblies);
+        return (modules, distinctAssemblies, assemblies);
     }
 }

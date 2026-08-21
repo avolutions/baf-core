@@ -59,16 +59,17 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         return entity;
     }
 
-    public virtual async Task DeleteAsync(Guid id)
+    public virtual async Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
-        var entity = await DbSet.FindAsync(id);
+        var entity = await DbSet.FindAsync([id], ct);
+
         if (entity is null)
         {
             throw new EntityNotFoundException(typeof(TEntity), id);
         }
 
         DbSet.Remove(entity);
-        await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync(ct);
     }
 
     public virtual async Task<TEntity?> GetByExternalIdAsync(string externalId, CancellationToken ct = default)

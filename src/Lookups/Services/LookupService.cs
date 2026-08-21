@@ -44,10 +44,10 @@ public class LookupService<T, TTranslation> : EntityService<T>, ILookupService<T
         return result;
     }
 
-    public override async Task DeleteAsync(Guid id)
+    public override async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        await base.DeleteAsync(id);
-        await RefreshCacheAsync();
+        await base.DeleteAsync(id, cancellationToken);
+        await RefreshCacheAsync(cancellationToken);
     }
 
     public override async Task<T?> GetByIdAsync(Guid id)

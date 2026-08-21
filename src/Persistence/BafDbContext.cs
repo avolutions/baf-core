@@ -42,7 +42,7 @@ public class BafDbContext : IdentityDbContext<User, Role, Guid>
         var registeredEntityTypes = this.GetRegisteredEntityTypes();
 
         var catalog = this.GetService<BafRegistry>();
-        foreach (var assembly in catalog.Assemblies)
+        foreach (var assembly in catalog.ModuleAssemblies)
         {
             // Model-wide conventions (IEntity rules, global filters, etc.) from the whole model.
             modelBuilder.ApplyModelConfigurationsFromAssembly(assembly);
