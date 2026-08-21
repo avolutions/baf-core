@@ -12,6 +12,7 @@ public class IdentityModule : IFeatureModule
 {
     public void Register(IServiceCollection services)
     {
+        services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddScoped<UserService>();
         services.AddScoped<IEntityService<User>, UserService>();
         
