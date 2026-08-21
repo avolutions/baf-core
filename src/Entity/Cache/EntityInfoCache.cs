@@ -33,7 +33,7 @@ public class EntityInfoCache : CacheBase<string, EntityInfo>, IEntityInfoCache
 
         var items = new List<EntityInfo>();
 
-        foreach (var assembly in registry.Assemblies)
+        foreach (var assembly in registry.ModuleAssemblies)
         {
             foreach (var type in GetTypes(assembly))
             {
