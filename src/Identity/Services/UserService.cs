@@ -139,7 +139,7 @@ public class UserService : IEntityService<User>
         return user;
     }
 
-    public Task DeleteAsync(Guid id)
+    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
