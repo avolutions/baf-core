@@ -45,9 +45,9 @@ public class UserService : IEntityService<User>
         return users;
     }
 
-    public async Task<User?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
 
         if (user != null)
         {

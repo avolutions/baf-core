@@ -30,9 +30,9 @@ public class EntityService<TEntity> : IEntityService<TEntity>
         return await DbSet.ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await DbSet.FindAsync(id);
+        return await DbSet.FindAsync([id], cancellationToken);
     }
 
     public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)

@@ -50,9 +50,9 @@ public class LookupService<T, TTranslation> : EntityService<T>, ILookupService<T
         await RefreshCacheAsync(cancellationToken);
     }
 
-    public override async Task<T?> GetByIdAsync(Guid id)
+    public override async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await GetByIdAsync(id, LocalizationContext.CurrentLanguage);
+        return await GetByIdAsync(id, LocalizationContext.CurrentLanguage, cancellationToken);
     }
 
     public async Task<T?> GetByIdAsync(Guid id, string language, CancellationToken cancellationToken = default)
