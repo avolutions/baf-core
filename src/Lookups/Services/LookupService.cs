@@ -89,7 +89,7 @@ public class LookupService<T, TTranslation> : BaseEntityService<T>, ILookupServi
         var dbSet = context.Set<T>();
         
         // Check if the entity exists
-        await GetByIdOrThrowAsync(context, id, ct);
+        await GetByIdOrThrowAsync(dbSet, id, ct);
         
         var isAlreadyDefault = await dbSet.AnyAsync(e => e.Id == id && e.IsDefault, ct);
         if (isAlreadyDefault)
