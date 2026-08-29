@@ -58,7 +58,7 @@ public class BaseEntityService<TEntity> : IEntityService<TEntity>
     {
         await using var context = await ContextFactory.CreateDbContextAsync(ct);
 
-        var existing = await GetTrackedOrThrowAsync(context, entity.Id, ct);
+        var existing = await GetByIdOrThrowAsync(context, entity.Id, ct);
 
         context.Entry(existing).CurrentValues.SetValues(entity);
         await context.SaveChangesAsync(ct);
@@ -70,13 +70,13 @@ public class BaseEntityService<TEntity> : IEntityService<TEntity>
     {
         await using var context = await ContextFactory.CreateDbContextAsync(ct);
 
-        var entity = await GetTrackedOrThrowAsync(context, id, ct);
+        var entity = await GetByIdOrThrowAsync(context, id, ct);
 
         context.Set<TEntity>().Remove(entity);
         await context.SaveChangesAsync(ct);
     }
     
-    protected static async Task<TEntity> GetTrackedOrThrowAsync(
+    protected static async Task<TEntity> GetByIdOrThrowAsync(
         BafDbContext context,
         Guid id,
         CancellationToken ct = default)
