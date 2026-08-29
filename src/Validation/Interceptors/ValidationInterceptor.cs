@@ -3,6 +3,7 @@ using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Validation.Abstractions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,26 +42,12 @@ public sealed class ValidationInterceptor(IServiceScopeFactory scopeFactory)
             {
                 continue;
             }
-
-            var ruleSet = entry.State == EntityState.Added
-                ? RuleSets.Create
-                : RuleSets.Update;
-
-            var validationContext = ValidationContext<object>.CreateWithOptions(
-                entry.Entity,
-                opts =>
-                {
-                    opts.IncludeRuleSets(ruleSet, RuleSets.CreateOrUpdate);
-                    opts.IncludeRulesNotInRuleSet();
-                });
-
-            var validationResult = await validator.ValidateAsync(validationContext, ct);
+            
+            var validationResult = await validator.ValidateAsync(BuildContext(entry), ct);
 
             if (!validationResult.IsValid)
             {
-                throw new EntityValidationException(
-                    entry.Metadata.ClrType,
-                    validationResult.Errors);
+                throw new EntityValidationException(entry.Metadata.ClrType, validationResult.Errors);
             }
         }
 
@@ -71,8 +58,51 @@ public sealed class ValidationInterceptor(IServiceScopeFactory scopeFactory)
         DbContextEventData eventData,
         InterceptionResult<int> result)
     {
-        throw new NotSupportedException(
-            $"{nameof(ValidationInterceptor)} requires SaveChangesAsync. " +
-            "Synchronous SaveChanges cannot run asynchronous validation rules.");
+        if (eventData.Context is null)
+        {
+            return result;
+        }
+
+        var entries = eventData.Context.ChangeTracker
+            .Entries<IEntity>()
+            .Where(e => e.State is EntityState.Added or EntityState.Modified)
+            .ToList();
+
+        if (entries.Count == 0)
+        {
+            return result;
+        }
+
+        using var scope = scopeFactory.CreateScope();
+
+        foreach (var entry in entries)
+        {
+            var validatorType = typeof(IValidator<>).MakeGenericType(entry.Metadata.ClrType);
+
+            if (scope.ServiceProvider.GetService(validatorType) is not IValidator validator)
+            {
+                continue;
+            }
+
+            var validationResult = validator.Validate(BuildContext(entry));
+
+            if (!validationResult.IsValid)
+            {
+                throw new EntityValidationException(entry.Metadata.ClrType, validationResult.Errors);
+            }
+        }
+
+        return result;
+    }
+    
+    private static IValidationContext BuildContext(EntityEntry entry)
+    {
+        var ruleSet = entry.State == EntityState.Added ? RuleSets.Create : RuleSets.Update;
+
+        return ValidationContext<object>.CreateWithOptions(entry.Entity, opts =>
+        {
+            opts.IncludeRuleSets(ruleSet, RuleSets.CreateOrUpdate);
+            opts.IncludeRulesNotInRuleSet();
+        });
     }
 }
