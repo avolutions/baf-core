@@ -4,6 +4,7 @@ using Avolutions.Baf.Core.Entity.Interceptors;
 using Avolutions.Baf.Core.Lookups.Interceptors;
 using Avolutions.Baf.Core.Module.Abstractions;
 using Avolutions.Baf.Core.Persistence;
+using Avolutions.Baf.Core.Validation.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -61,6 +62,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContextFactory<TContext>((sp, options) =>
         {
             options.AddInterceptors(
+                sp.GetRequiredService<ValidationInterceptor>(),
                 sp.GetRequiredService<AuditSaveChangesInterceptor>(),
                 sp.GetRequiredService<TrackableSaveChangesInterceptor>(),
                 sp.GetRequiredService<LookupHydrationInterceptor>(),

@@ -20,9 +20,9 @@ public class UserService : IEntityService<User>
         _userCache = userCache;
     }
     
-    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<User>> GetAllAsync(CancellationToken ct = default)
     {
-        return await GetAllAsync(false, cancellationToken);
+        return await GetAllAsync(false, ct);
     }
     
     public async Task<List<User>> GetAllAsync(bool includeSystemUser = false, CancellationToken cancellationToken = default)
@@ -45,9 +45,9 @@ public class UserService : IEntityService<User>
         return users;
     }
 
-    public async Task<User?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
 
         if (user != null)
         {
@@ -76,7 +76,7 @@ public class UserService : IEntityService<User>
         return systemUser;
     }
 
-    public Task<User> CreateAsync(User user, CancellationToken cancellationToken = default)
+    public Task<User> CreateAsync(User user, CancellationToken ct = default)
     {
         throw new NotImplementedException();
     }
@@ -103,7 +103,7 @@ public class UserService : IEntityService<User>
         return user;
     }
     
-    public async Task<User> UpdateAsync(User user, CancellationToken cancellationToken = default)
+    public async Task<User> UpdateAsync(User user, CancellationToken ct = default)
     {
         if (!await _roleManager.RoleExistsAsync(user.RoleName))
         {
@@ -139,12 +139,12 @@ public class UserService : IEntityService<User>
         return user;
     }
 
-    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<User?> GetByExternalIdAsync(string externalId, CancellationToken cancellationToken = default)
+    public Task<User?> GetByExternalIdAsync(string externalId, CancellationToken ct = default)
     {
         throw new NotImplementedException();
     }

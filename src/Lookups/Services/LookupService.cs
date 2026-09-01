@@ -1,10 +1,8 @@
 ﻿using Avolutions.Baf.Core.Entity.Abstractions;
-using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Entity.Services;
 using Avolutions.Baf.Core.Localization;
 using Avolutions.Baf.Core.Lookups.Abstractions;
 using Avolutions.Baf.Core.Persistence;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Lookups.Services;
@@ -16,112 +14,120 @@ public class LookupService<T, TTranslation> : EntityService<T>, ILookupService<T
     private readonly ILookupCache<T>? _cache;
     
     public LookupService(
-        DbContext context,
         IDbContextFactory<BafDbContext> contextFactory,
-        ILookupCache<T>? cache = null,
-        IValidator<T>? validator = null) : base(context, contextFactory, validator)
+        ILookupCache<T>? cache = null) : base(contextFactory)
     {
         _cache = cache;
     }
 
-    public override async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
+    public override async Task<T> CreateAsync(T entity, CancellationToken ct = default)
     {
-        if (!await DbSet.AnyAsync(cancellationToken))
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+        
+        if (!await context.Set<T>().AnyAsync(ct))
         {
             entity.IsDefault = true;
         }
         
-        var result = await base.CreateAsync(entity, cancellationToken);
-        await RefreshCacheAsync(cancellationToken);
+        var result = await base.CreateAsync(entity, ct);
+        await RefreshCacheAsync(ct);
         
         return result;
     }
     
-    public override async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public override async Task<T> UpdateAsync(T entity, CancellationToken ct = default)
     {
-        var result = await base.UpdateAsync(entity, cancellationToken);
-        await RefreshCacheAsync(cancellationToken);
+        var result = await base.UpdateAsync(entity, ct);
+        await RefreshCacheAsync(ct);
         return result;
     }
 
-    public override async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    public override async Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
-        await base.DeleteAsync(id, cancellationToken);
-        await RefreshCacheAsync(cancellationToken);
+        await base.DeleteAsync(id, ct);
+        await RefreshCacheAsync(ct);
     }
 
-    public override async Task<T?> GetByIdAsync(Guid id)
+    public override async Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await GetByIdAsync(id, LocalizationContext.CurrentLanguage);
+        return await GetByIdAsync(id, LocalizationContext.CurrentLanguage, ct);
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, string language, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(Guid id, string language, CancellationToken ct = default)
     {
-        return await DbSet
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+
+        return await context.Set<T>()
             .Include(p => p.Translations.Where(t => t.Language == language))
             .AsNoTracking()
-            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+            .SingleOrDefaultAsync(p => p.Id == id, ct);
     }
 
-    public override async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
+    public override async Task<List<T>> GetAllAsync(CancellationToken ct = default)
     {
-        return await DbSet
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+
+        return await context.Set<T>()
             .Include(p => p.Translations)
             .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
     }
 
-    public async Task<List<T>> GetAllAsync(string language, CancellationToken cancellationToken = default)
+    public async Task<List<T>> GetAllAsync(string language, CancellationToken ct = default)
     {
-        return await DbSet
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+
+        return await context.Set<T>()
             .Include(p => p.Translations.Where(t => t.Language == language))
             .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
     }
 
-    public async Task SetDefaultAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task SetDefaultAsync(Guid id, CancellationToken ct = default)
     {
-        var exists = await DbSet.AnyAsync(e => e.Id == id, cancellationToken);
-        if (!exists)
-        {
-            throw new EntityNotFoundException(typeof(T), id);
-        }
-
-        var isAlreadyDefault = await DbSet.AnyAsync(e => e.Id == id && e.IsDefault, cancellationToken);
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+        var dbSet = context.Set<T>();
+        
+        // Check if the entity exists
+        await GetByIdOrThrowAsync(dbSet, id, ct);
+        
+        var isAlreadyDefault = await dbSet.AnyAsync(e => e.Id == id && e.IsDefault, ct);
         if (isAlreadyDefault)
         {
             return;
         }
-
+        
         // Clear current default
-        await DbSet
+        await dbSet
             .Where(q => q.IsDefault)
             .ExecuteUpdateAsync(
                 q => q.SetProperty(x => x.IsDefault, false),
-                cancellationToken);
+                ct);
 
         // Set new default
-        await DbSet
+        await dbSet
             .Where(q => q.Id == id)
             .ExecuteUpdateAsync(
                 q => q.SetProperty(x => x.IsDefault, true),
-                cancellationToken);
+                ct);
 
-        await RefreshCacheAsync(cancellationToken);
+        await RefreshCacheAsync(ct);
     }
 
-    public Task<T> GetDefaultAsync(CancellationToken cancellationToken = default)
+    public async Task<T> GetDefaultAsync(CancellationToken ct = default)
     {
-        return DbSet
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+        
+        return await context.Set<T>()
             .AsNoTracking()
-            .SingleAsync(p => p.IsDefault, cancellationToken);
+            .SingleAsync(p => p.IsDefault, ct);
     }
     
-    private async Task RefreshCacheAsync(CancellationToken cancellationToken = default)
+    private async Task RefreshCacheAsync(CancellationToken ct = default)
     {
         if (_cache is not null)
         {
-            await _cache.RefreshAsync(cancellationToken);
+            await _cache.RefreshAsync(ct);
         }
     }
 }
