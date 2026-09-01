@@ -14,7 +14,6 @@ public class EntityModule : IFeatureModule
     public void Register(IServiceCollection services)
     {
         services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
-        services.AddScoped(typeof(IEntityService<>), typeof(BaseEntityService<>));
         services.AddScoped(typeof(IEntityLockStatusService<>), typeof(EntityLockStatusService<>));
         services.TryAddSingleton<TrackableSaveChangesInterceptor>();
         services.AddSingleton(typeof(IEntityRouteProvider<>), typeof(EntityRouteProvider<>));

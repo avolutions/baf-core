@@ -1,8 +1,6 @@
 ﻿using Avolutions.Baf.Core.Entity.Abstractions;
 using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Persistence;
-using Avolutions.Baf.Core.Validation.Abstractions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Entity.Services;
@@ -11,91 +9,86 @@ public class EntityService<TEntity> : IEntityService<TEntity>
     where TEntity : class, IEntity
 {
     protected readonly IDbContextFactory<BafDbContext> ContextFactory;
-    protected readonly DbContext Context;
-    protected readonly DbSet<TEntity> DbSet;
-    protected readonly IValidator<TEntity>? Validator;
 
-    public EntityService(DbContext context, IDbContextFactory<BafDbContext> contextFactory) : this(context, contextFactory, null) {}
-        
-    public EntityService(DbContext context, IDbContextFactory<BafDbContext> contextFactory, IValidator<TEntity>? validator)
+    public EntityService(IDbContextFactory<BafDbContext> contextFactory)
     {
-        Context = context;
-        DbSet = context.Set<TEntity>();
-        Validator = validator;
         ContextFactory = contextFactory;
     }
-        
-    public virtual async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+
+    public virtual async Task<List<TEntity>> GetAllAsync(CancellationToken ct = default)
     {
-        return await DbSet.ToListAsync(cancellationToken);
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+
+        return await context.Set<TEntity>()
+            .AsNoTracking()
+            .ToListAsync(ct);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await DbSet.FindAsync([id], cancellationToken);
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+
+        return await context.Set<TEntity>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == id, ct);
     }
 
-    public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity?> GetByExternalIdAsync(
+        string externalId,
+        CancellationToken ct = default)
     {
-        await ValidateOrThrowAsync(entity, RuleSets.Create, cancellationToken);
-        
-        DbSet.Add(entity);
-        await Context.SaveChangesAsync(cancellationToken);
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+
+        return await context.Set<TEntity>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.ExternalId == externalId, ct);
+    }
+
+    public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken ct = default)
+    {
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+
+        context.Set<TEntity>().Add(entity);
+        await context.SaveChangesAsync(ct);
+
         return entity;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct = default)
     {
-        var exists = await DbSet.AnyAsync(e => e.Id == entity.Id, cancellationToken: cancellationToken);
-        if (!exists)
-        {
-            throw new EntityNotFoundException(typeof(TEntity), entity.Id);
-        }
-        
-        await ValidateOrThrowAsync(entity, RuleSets.Update, cancellationToken);
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
 
-        DbSet.Update(entity);
-        await Context.SaveChangesAsync(cancellationToken);
-        return entity;
+        var existing = await GetByIdOrThrowAsync(context.Set<TEntity>(), entity.Id, ct);
+
+        context.Entry(existing).CurrentValues.SetValues(entity);
+        await context.SaveChangesAsync(ct);
+
+        return existing;
     }
 
     public virtual async Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
-        var entity = await DbSet.FindAsync([id], ct);
+        await using var context = await ContextFactory.CreateDbContextAsync(ct);
+        var dbSet = context.Set<TEntity>();
+        
+        var entity = await GetByIdOrThrowAsync(dbSet, id, ct);
+
+        dbSet.Remove(entity);
+        await context.SaveChangesAsync(ct);
+    }
+    
+    protected static async Task<TEntity> GetByIdOrThrowAsync(
+        IQueryable<TEntity> query,
+        Guid id,
+        CancellationToken ct = default)
+    {
+        var entity = await query.FirstOrDefaultAsync(e => e.Id == id, ct);
 
         if (entity is null)
         {
             throw new EntityNotFoundException(typeof(TEntity), id);
         }
 
-        DbSet.Remove(entity);
-        await Context.SaveChangesAsync(ct);
-    }
-
-    public virtual async Task<TEntity?> GetByExternalIdAsync(string externalId, CancellationToken ct = default)
-    {
-        return await DbSet.FirstOrDefaultAsync(e => e.ExternalId == externalId, cancellationToken: ct);
-    }
-    
-    protected virtual async Task ValidateOrThrowAsync(TEntity entity, string? ruleSet = null, CancellationToken ct = default)
-    {
-        if (Validator is null) 
-        {
-            return;
-        }
-
-        var result = await Validator.ValidateAsync(entity, opts =>
-        {
-            if (!string.IsNullOrWhiteSpace(ruleSet))
-            {
-                opts.IncludeRuleSets(ruleSet, RuleSets.CreateOrUpdate);
-            }
-            opts.IncludeRulesNotInRuleSet();
-        }, ct);
-
-        if (!result.IsValid)
-        {
-            throw new EntityValidationException(typeof(TEntity), result.Errors);
-        }
+        return entity;
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Lookups.Services;
 
-public class LookupService<T, TTranslation> : BaseEntityService<T>, ILookupService<T>
+public class LookupService<T, TTranslation> : EntityService<T>, ILookupService<T>
     where T : class, ILookup<TTranslation>, IEntity
     where TTranslation : class, ILookupTranslation
 {
