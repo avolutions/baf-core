@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Avolutions.Baf.Core</PackageId>
-    <Version>0.27.0</Version>
+    <Version>0.28.0</Version>
 
     <Title>Avolutions BAF Core</Title>
     <Company>Avolutions</Company>
@@ -82,6 +82,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MailingResources.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Lookups\Resources\LookupResources.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LookupResources.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -119,6 +123,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MailingResources.de.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Lookups\Resources\LookupResources.de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LookupResources.de.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
