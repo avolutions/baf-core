@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text;
 using Avolutions.Baf.Core.Entity.Exceptions;
 using Avolutions.Baf.Core.Import.Abstractions;
 using Avolutions.Baf.Core.Import.Models;
@@ -24,6 +25,7 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
         IgnoreBlankLines = true,
         TrimOptions = TrimOptions.Trim
     };
+    protected virtual Encoding FileEncoding => Encoding.UTF8;
     
     public virtual string Type => string.Empty;
     public virtual string Description => string.Empty;
@@ -35,7 +37,7 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
         
         try
         {
-            using var reader = new StreamReader(stream);
+            using var reader = new StreamReader(stream, FileEncoding);
             using var parser = new CsvParser(reader, Configuration);
             using var csv = new CsvReader(parser);
 
@@ -83,6 +85,15 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                     result.Errors.Add(new CsvImportError(ex.Message, rowNumber));
                 }
             }
+            
+            try
+            {
+                await OnImportCompletedAsync(result, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                result.Errors.Add(new CsvImportError(ex.Message));
+            }
         }
         catch (Exception ex)
         {
@@ -93,8 +104,10 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
     }
 
     protected abstract Task<int> CreateRecordAsync(TRow row, CancellationToken cancellationToken);
-
     protected abstract Task<int> UpdateRecordAsync(T existingRecord, TRow row, CancellationToken cancellationToken);
-
     protected abstract Task<T?> GetExistingRecordAsync(TRow row, CancellationToken cancellationToken);
+    protected virtual Task OnImportCompletedAsync(ImportResult result, CancellationToken ct)
+    {
+        return Task.CompletedTask;
+    }
 }
