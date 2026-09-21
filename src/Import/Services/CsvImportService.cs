@@ -5,19 +5,11 @@ using Avolutions.Baf.Core.Import.Abstractions;
 using Avolutions.Baf.Core.Import.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Import.Services;
 
 public abstract class CsvImportService<T, TRow> : IFileImportService
 {
-    protected readonly DbContext DbContext;
-
-    protected CsvImportService(DbContext db)
-    {
-        DbContext = db;
-    }
-
     protected virtual CsvConfiguration Configuration => new(CultureInfo.InvariantCulture)
     {
         Delimiter = ";",
@@ -46,6 +38,8 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
             {
                 csv.ReadHeader();
             }
+            
+            await OnImportStartingAsync(cancellationToken);
 
             while (await csv.ReadAsync())
             {
@@ -106,6 +100,10 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
     protected abstract Task<int> CreateRecordAsync(TRow row, CancellationToken cancellationToken);
     protected abstract Task<int> UpdateRecordAsync(T existingRecord, TRow row, CancellationToken cancellationToken);
     protected abstract Task<T?> GetExistingRecordAsync(TRow row, CancellationToken cancellationToken);
+    protected virtual Task OnImportStartingAsync(CancellationToken ct)
+    {
+        return Task.CompletedTask;
+    }
     protected virtual Task OnImportCompletedAsync(ImportResult result, CancellationToken ct)
     {
         return Task.CompletedTask;
