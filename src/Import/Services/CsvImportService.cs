@@ -11,13 +11,6 @@ namespace Avolutions.Baf.Core.Import.Services;
 
 public abstract class CsvImportService<T, TRow> : IFileImportService
 {
-    protected readonly DbContext DbContext;
-
-    protected CsvImportService(DbContext db)
-    {
-        DbContext = db;
-    }
-
     protected virtual CsvConfiguration Configuration => new(CultureInfo.InvariantCulture)
     {
         Delimiter = ";",
@@ -46,6 +39,8 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
             {
                 csv.ReadHeader();
             }
+            
+            await OnImportStartingAsync(cancellationToken);
 
             while (await csv.ReadAsync())
             {
@@ -54,7 +49,7 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                 try
                 {
                     var row = csv.GetRecord<TRow>();
-                    
+
                     var existingRecord = await GetExistingRecordAsync(row, cancellationToken);
                     if (existingRecord != null)
                     {
@@ -63,7 +58,7 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                             result.RecordsIgnored++;
                             continue;
                         }
-                    
+
                         result.RecordsUpdated += await UpdateRecordAsync(existingRecord, row, cancellationToken);
                     }
                     else
@@ -78,6 +73,11 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                     {
                         result.Errors.Add(new CsvImportError(failure.ErrorMessage, rowNumber));
                     }
+                }
+                catch (DbUpdateException ex)
+                {
+                    var rowNumber = csv.Context?.Parser?.Row;
+                    result.Errors.Add(new CsvImportError(ex.InnerException?.Message ?? ex.Message, rowNumber));
                 }
                 catch (Exception ex)
                 {
@@ -106,6 +106,10 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
     protected abstract Task<int> CreateRecordAsync(TRow row, CancellationToken cancellationToken);
     protected abstract Task<int> UpdateRecordAsync(T existingRecord, TRow row, CancellationToken cancellationToken);
     protected abstract Task<T?> GetExistingRecordAsync(TRow row, CancellationToken cancellationToken);
+    protected virtual Task OnImportStartingAsync(CancellationToken ct)
+    {
+        return Task.CompletedTask;
+    }
     protected virtual Task OnImportCompletedAsync(ImportResult result, CancellationToken ct)
     {
         return Task.CompletedTask;
