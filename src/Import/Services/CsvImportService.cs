@@ -5,6 +5,7 @@ using Avolutions.Baf.Core.Import.Abstractions;
 using Avolutions.Baf.Core.Import.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Avolutions.Baf.Core.Import.Services;
 
@@ -48,7 +49,7 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                 try
                 {
                     var row = csv.GetRecord<TRow>();
-                    
+
                     var existingRecord = await GetExistingRecordAsync(row, cancellationToken);
                     if (existingRecord != null)
                     {
@@ -57,7 +58,7 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                             result.RecordsIgnored++;
                             continue;
                         }
-                    
+
                         result.RecordsUpdated += await UpdateRecordAsync(existingRecord, row, cancellationToken);
                     }
                     else
@@ -72,6 +73,11 @@ public abstract class CsvImportService<T, TRow> : IFileImportService
                     {
                         result.Errors.Add(new CsvImportError(failure.ErrorMessage, rowNumber));
                     }
+                }
+                catch (DbUpdateException ex)
+                {
+                    var rowNumber = csv.Context?.Parser?.Row;
+                    result.Errors.Add(new CsvImportError(ex.InnerException?.Message ?? ex.Message, rowNumber));
                 }
                 catch (Exception ex)
                 {
