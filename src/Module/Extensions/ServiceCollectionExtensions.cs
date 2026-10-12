@@ -18,8 +18,10 @@ namespace Avolutions.Baf.Core.Module.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Scans the specified assemblies (or all loaded assemblies if none provided) 
+    /// Scans the specified assemblies (or, if none provided, all Avolutions.Baf.* assemblies
+    /// followed by the assembly containing <typeparamref name="TContext"/>)
     /// for types implementing <see cref="IFeatureModule"/>.
+    /// Application modules are registered last, so they can override Baf registrations.
     /// 
     /// Each discovered module's <see cref="IFeatureModule.Register"/> method is called 
     /// to add its services to the DI container.
@@ -29,7 +31,8 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The DI service collection.</param>
     /// <param name="assemblies">
-    /// Optional list of assemblies to scan. If empty, all currently loaded assemblies are scanned.
+    /// Optional list of assemblies to scan, in registration order.
+    /// If empty, the Avolutions.Baf.* assemblies and the application assembly are scanned.
     /// </param>
     /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
     public static IServiceCollection AddBafCore<TContext>(this IServiceCollection services, params Assembly[] assemblies)
@@ -47,7 +50,8 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<DbContext>(sp => sp.GetRequiredService<TContext>());
         services.TryAddScoped<BafDbContext>(sp => sp.GetRequiredService<TContext>());
 
-        var (modules, moduleAssemblies, scannedAssemblies) = DiscoverModulesAndAssemblies(assemblies);
+        var (modules, moduleAssemblies, scannedAssemblies) =
+            DiscoverModulesAndAssemblies(assemblies, typeof(TContext).Assembly);
 
         // Let each module register its own services
         foreach (var module in modules)
@@ -76,14 +80,18 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Finds all concrete types implementing IFeatureModule and returns the created
     /// instances plus the distinct assemblies that contain at least one such module.
+    /// Modules are returned in assembly order, so later modules can override earlier registrations.
     /// </summary>
     private static (IFeatureModule[] Modules, Assembly[] Assemblies, Assembly[] ScannedAssemblies)
-        DiscoverModulesAndAssemblies(Assembly[]? assemblies)
+        DiscoverModulesAndAssemblies(Assembly[]? assemblies, Assembly applicationAssembly)
     {
         assemblies ??= [];
         if (assemblies.Length == 0)
         {
-            assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            assemblies = GetBafAssemblies(applicationAssembly)
+                .Append(applicationAssembly)
+                .Distinct()
+                .ToArray();
         }
 
         var moduleTypes = assemblies
@@ -105,4 +113,40 @@ public static class ServiceCollectionExtensions
         
         return (modules, distinctAssemblies, assemblies);
     }
+
+    /// <summary>
+    /// Returns all Avolutions.Baf.* assemblies referenced (directly or transitively) by the
+    /// application assembly, ordered so that each assembly comes after the Baf assemblies it depends on.
+    /// </summary>
+    private static IEnumerable<Assembly> GetBafAssemblies(Assembly applicationAssembly)
+    {
+        var ordered = new List<Assembly>();
+        var visited = new HashSet<string>();
+
+        foreach (var reference in applicationAssembly.GetReferencedAssemblies())
+        {
+            Visit(reference);
+        }
+
+        return ordered;
+
+        void Visit(AssemblyName name)
+        {
+            if (!IsBafAssembly(name.Name) || !visited.Add(name.Name!))
+            {
+                return;
+            }
+
+            var assembly = Assembly.Load(name);
+            foreach (var reference in assembly.GetReferencedAssemblies())
+            {
+                Visit(reference);
+            }
+
+            ordered.Add(assembly);
+        }
+    }
+
+    private static bool IsBafAssembly(string? name)
+        => name?.StartsWith("Avolutions.Baf.", StringComparison.Ordinal) == true;
 }
